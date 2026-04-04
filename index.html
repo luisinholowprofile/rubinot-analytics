@@ -37,7 +37,6 @@
       --text-muted: #9ca3af;
       --border: #e5e7eb;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg-deep);
@@ -56,7 +55,10 @@
       overflow-y: auto;
       transition: var(--transition);
     }
-    .sidebar-header { padding: 28px 24px; border-bottom: 1px solid var(--border); }
+    .sidebar-header { 
+      padding: 28px 24px; 
+      border-bottom: 1px solid var(--border);
+    }
     .brand h1 {
       font-size: 28px;
       font-weight: 800;
@@ -64,6 +66,59 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      margin-bottom: 16px;
+    }
+    /* NOVO: Estilo para o badge de última atualização */
+    .last-update-badge {
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    .update-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .update-time {
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.green { background: #10b981; }
+    .status-dot.yellow { background: #f59e0b; }
+    .status-dot.red { background: #ef4444; animation: none; }
+    .next-update-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
     }
     .sidebar-content { padding: 24px; }
     .filter-section { margin-bottom: 32px; }
@@ -134,7 +189,6 @@
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
     .theme-toggle {
       margin-top: 20px;
       padding-top: 20px;
@@ -347,7 +401,6 @@
       display: none;
       z-index: 1000;
     }
-    /* Simulador */
     .simulator-card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
@@ -405,8 +458,6 @@
       border-radius: 20px;
       transition: width 0.5s;
     }
-
-    /* Stamina */
     .stamina-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -506,7 +557,25 @@
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header"><div class="brand"><h1>RubinOT</h1></div></div>
+    <div class="sidebar-header">
+      <div class="brand"><h1>RubinOT</h1></div>
+      <!-- NOVO: Badge de última atualização -->
+      <div class="last-update-badge" id="lastUpdateBadge">
+        <div class="update-header">
+          <i class="fas fa-clock"></i>
+          <span>Última coleta</span>
+        </div>
+        <div class="update-time" id="lastUpdateTime">Carregando...</div>
+        <div class="status-indicator" id="statusIndicator">
+          <div class="status-dot green" id="statusDot"></div>
+          <span id="statusText">Verificando...</span>
+        </div>
+        <div class="next-update-info" id="nextUpdateInfo">
+          <i class="fas fa-hourglass-half"></i>
+          <span>Próxima coleta: <strong id="nextUpdateTime">Calculando...</strong></span>
+        </div>
+      </div>
+    </div>
     <div class="sidebar-content">
       <div class="filter-section">
         <h3>📅 Período</h3>
@@ -543,15 +612,13 @@
       <button class="tab-btn" data-tab="tab5"><i class="fas fa-bolt"></i> Stamina</button>
     </div>
 
-    <!-- ABA 1 - VISÃO GERAL (MODIFICADA) -->
+    <!-- ABA 1 - VISÃO GERAL -->
     <div id="tab1" class="tab-content active">
       <div class="kpi-grid">
-        <!-- Apenas dois KPIs: Jogadores e Maior Level -->
         <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-content"><div class="kpi-label">Jogadores</div><div class="kpi-value" id="totalJogadores">0</div></div></div>
         <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-trophy"></i></div><div class="kpi-content"><div class="kpi-label">Maior Level</div><div class="kpi-value" id="maiorLevel">0</div></div></div>
       </div>
 
-      <!-- Top 3 Ganhadores do Dia -->
       <div class="top-players-section">
         <div class="section-header"><h2><i class="fas fa-fire-flame-curved" style="color:var(--gold);"></i> 🔥 Top Ganhadores do Dia</h2></div>
         <div class="top-players-grid" id="topPlayersGrid"><div class="empty-state">Carregando dados...</div></div>
@@ -685,7 +752,81 @@
   let currentPeriod = "tudo";
   let customDate = null;
   let pieChart, comparativeChart, lineChart;
+  let lastUpdateData = null;
+  let nextUpdateEstimate = null;
   const coresPizza = ['#fbbf24', '#6366f1', '#34d399', '#8b5cf6', '#f97316', '#ec4899', '#06b6d4'];
+
+  // ==================== FUNÇÃO PARA ATUALIZAR STATUS ====================
+  function atualizarStatusUltimaAtualizacao(lastUpdate, nextEstimate) {
+    const lastUpdateElement = document.getElementById('lastUpdateTime');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const nextUpdateElement = document.getElementById('nextUpdateTime');
+    
+    if (!lastUpdate || !lastUpdateElement) return;
+    
+    const data = new Date(lastUpdate);
+    const agora = new Date();
+    const diffMinutes = (agora - data) / (1000 * 60);
+    
+    // Formata a data/hora
+    const dia = data.getDate().toString().padStart(2, '0');
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+    const horas = data.getHours().toString().padStart(2, '0');
+    const minutos = data.getMinutes().toString().padStart(2, '0');
+    const segundos = data.getSeconds().toString().padStart(2, '0');
+    
+    lastUpdateElement.textContent = `${dia}/${mes} ${horas}:${minutos}:${segundos}`;
+    
+    // Define o status baseado no tempo desde a última atualização
+    if (diffMinutes <= 35) {
+      // Dados recentes (menos de 35 minutos)
+      statusDot.className = 'status-dot green';
+      statusText.textContent = '✅ Dados atualizados';
+    } else if (diffMinutes <= 60) {
+      // Dados começando a ficar antigos (35-60 minutos)
+      statusDot.className = 'status-dot yellow';
+      statusText.textContent = '⚠️ Aguardando atualização...';
+    } else {
+      // Dados desatualizados (mais de 1 hora)
+      statusDot.className = 'status-dot red';
+      statusText.textContent = '❌ Dados desatualizados!';
+    }
+    
+    // Calcula e exibe a próxima coleta estimada
+    if (nextEstimate) {
+      const nextDate = new Date(nextEstimate * 1000);
+      const now = new Date();
+      const diffToNext = (nextDate - now) / (1000 * 60);
+      
+      if (diffToNext > 0 && diffToNext < 60) {
+        const minutosRestantes = Math.floor(diffToNext);
+        const segundosRestantes = Math.floor((diffToNext - minutosRestantes) * 60);
+        nextUpdateElement.textContent = `${minutosRestantes}min ${segundosRestantes}s`;
+      } else if (diffToNext > 0) {
+        const horasRestantes = Math.floor(diffToNext / 60);
+        const minutosRestantes = Math.floor(diffToNext % 60);
+        nextUpdateElement.textContent = `${horasRestantes}h ${minutosRestantes}min`;
+      } else {
+        nextUpdateElement.textContent = "Em breve";
+      }
+    } else {
+      // Se não tiver estimativa, calcula baseado no último update + 30 min
+      const proxima = new Date(data.getTime() + 30 * 60000);
+      const now = new Date();
+      const diffToNext = (proxima - now) / (1000 * 60);
+      
+      if (diffToNext > 0 && diffToNext < 60) {
+        const minutosRestantes = Math.floor(diffToNext);
+        nextUpdateElement.textContent = `${minutosRestantes}min`;
+      } else if (diffToNext > 0) {
+        const horasRestantes = Math.floor(diffToNext / 60);
+        nextUpdateElement.textContent = `${horasRestantes}h`;
+      } else {
+        nextUpdateElement.textContent = "Calculando...";
+      }
+    }
+  }
 
   // ==================== FUNÇÃO PARA OBTER EXPERIÊNCIA INICIAL DO PERÍODO ====================
   function getInitialXPForPeriod(playerHistory, period, customDateStr = null) {
@@ -735,8 +876,26 @@
       const response = await fetch('dados_serenian.json?' + Date.now());
       if (!response.ok) throw new Error(`Arquivo não encontrado (${response.status})`);
       const data = await response.json();
-      if (!Array.isArray(data) || data.length === 0) throw new Error('JSON vazio');
-      dadosReais = data.map((j, idx) => ({
+      
+      // Verifica se tem metadados (novo formato)
+      let playersData;
+      if (data.last_update) {
+        lastUpdateData = data.last_update;
+        nextUpdateEstimate = data.next_update_estimate;
+        playersData = data.players;
+        
+        // Atualiza o status visual
+        atualizarStatusUltimaAtualizacao(lastUpdateData, nextUpdateEstimate);
+      } else {
+        // Formato antigo (sem metadados)
+        playersData = data;
+        lastUpdateData = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        atualizarStatusUltimaAtualizacao(lastUpdateData, null);
+      }
+      
+      if (!Array.isArray(playersData) || playersData.length === 0) throw new Error('JSON vazio');
+      
+      dadosReais = playersData.map((j, idx) => ({
         rank: j.rank || idx + 1,
         name: j.name || 'Desconhecido',
         vocation: j.vocation || '-',
@@ -744,6 +903,7 @@
         experience: Number(j.experience) || 0,
         history: j.history || []
       }));
+      
       dadosReais.sort((a,b) => b.experience - a.experience);
       dadosReais.forEach((j,i) => j.rank = i+1);
       return true;
@@ -758,11 +918,8 @@
   // ==================== GANHO DO DIA (ÚLTIMAS 24H) ====================
   function getDailyGain(player) {
     if (!player.history || player.history.length === 0) return 0;
-    // Ordenar histórico do mais antigo para o mais novo
     const sorted = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
-    // Pegar a última entrada (atual)
     const currentXP = player.experience;
-    // Encontrar a entrada mais recente que seja anterior à meia-noite de hoje
     const todayMidnight = new Date();
     todayMidnight.setHours(0,0,0,0);
     let previousXP = null;
@@ -774,7 +931,6 @@
       }
     }
     if (previousXP === null && sorted.length > 0) {
-      // Se não há entrada anterior à meia-noite, usa a mais antiga disponível
       previousXP = sorted[0].experience;
     }
     if (previousXP === null) return 0;
@@ -789,7 +945,6 @@
     document.getElementById('totalJogadores').innerHTML = totalJogadores;
     document.getElementById('maiorLevel').innerHTML = maiorLevel;
 
-    // Top 3 Ganhadores do Dia
     const playersWithDailyGain = dadosReais.map(player => ({
       ...player,
       dailyGain: getDailyGain(player)
@@ -808,16 +963,13 @@
     `).join('');
     if (top3Daily.length === 0) topGrid.innerHTML = '<div class="empty-state">Sem dados de ganho diário</div>';
 
-    // Ranking completo (por XP total)
     document.getElementById('rankingBody').innerHTML = dadosReais.map(j=>`<tr><td><strong>#${j.rank}</strong></td><td><i class="fas fa-user"></i> ${j.name}</td><td>${j.vocation}</td><td style="color:#60a5fa;">${j.level}</td><td style="color:var(--emerald);">${j.experience.toLocaleString('pt-BR')}</td></tr>`).join('');
 
-    // Gráfico de barras comparativo (por XP total)
     const ctxBar = document.getElementById('comparativeBarChart').getContext('2d');
     const top8 = dadosReais.slice(0,8);
     if (comparativeChart) comparativeChart.destroy();
     comparativeChart = new Chart(ctxBar, { type: 'bar', data: { labels: top8.map(p=>p.name), datasets: [{ label: 'XP Total', data: top8.map(p=>p.experience), backgroundColor: coresPizza, borderRadius: 8 }] }, options: { responsive: true } });
     
-    // Gráfico de pizza (distribuição por XP total)
     const topPizza = dadosReais.slice(0,6);
     const totalXP = dadosReais.reduce((s,j)=>s+j.experience,0);
     if (pieChart) pieChart.destroy();
@@ -825,7 +977,6 @@
     pieChart = new Chart(ctxPie, { type: 'pie', data: { labels: topPizza.map(p=>p.name), datasets: [{ data: topPizza.map(p=>p.experience), backgroundColor: coresPizza }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
     document.getElementById('legendList').innerHTML = topPizza.map((p,i)=>`<div style="display:flex; align-items:center; gap:10px;"><div style="width:16px; height:16px; background:${coresPizza[i]}; border-radius:8px;"></div><span>${p.name}</span><span>${((p.experience/totalXP)*100).toFixed(1)}%</span></div>`).join('');
     
-    // Atualizar selects
     const simSelect = document.getElementById('simPlayerSelect');
     simSelect.innerHTML = '<option value="">-- Selecione um jogador --</option>' + dadosReais.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
     simSelect.onchange = () => {
@@ -974,7 +1125,6 @@
         const ctxPie = document.getElementById('pieChart').getContext('2d');
         pieChart = new Chart(ctxPie, { type: 'pie', data: { labels: [j.name], datasets: [{ data: [j.experience], backgroundColor: ['#fbbf24'] }] }, options: { responsive: true } });
         document.getElementById('legendList').innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><div style="width:16px; height:16px; background:#fbbf24; border-radius:8px;"></div><span>${j.name}</span><span>100%</span></div>`;
-        // Atualizar top 3 (apenas com este jogador)
         const topGrid = document.getElementById('topPlayersGrid');
         topGrid.innerHTML = `<div class="top-player-card"><div class="top-player-rank">#1 🏆</div><div class="top-player-name">${j.name}</div><div style="color:#a5b4fc; margin:8px 0;">${j.vocation}</div><div class="top-player-stats"><span>⚡ Level</span><span style="color:var(--emerald); font-weight:800;">${j.level}</span></div><div>📊 Ganho hoje: <strong style="color:var(--gold);">${getDailyGain(j).toLocaleString('pt-BR')}</strong></div></div>`;
         renderDetailedAnalysis();
@@ -1152,6 +1302,17 @@
     });
   }
 
+  // Atualização periódica do contador (a cada segundo)
+  let contadorInterval;
+  function iniciarContadorAtualizacao() {
+    if (contadorInterval) clearInterval(contadorInterval);
+    contadorInterval = setInterval(() => {
+      if (lastUpdateData) {
+        atualizarStatusUltimaAtualizacao(lastUpdateData, nextUpdateEstimate);
+      }
+    }, 1000);
+  }
+
   let intervaloId;
   async function inicializar() {
     const ok = await carregarDadosDoArquivo();
@@ -1169,6 +1330,10 @@
       setupStaminaInput('staminaAtualHorario');
       document.getElementById('calcSimBtn').addEventListener('click', calcularSimulador);
       calcularSimulador();
+      
+      // Inicia o contador para atualizar o tempo restante
+      iniciarContadorAtualizacao();
+      
       if (intervaloId) clearInterval(intervaloId);
       intervaloId = setInterval(async () => {
         await carregarDadosDoArquivo();
