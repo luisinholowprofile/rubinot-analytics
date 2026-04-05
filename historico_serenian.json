@@ -3534,5 +3534,77 @@
         "experience": 33112987474,
         "vocation": "Elder Druid",
         "rank": "11."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Kaiquerah Lowprofile",
+        "level": 1429,
+        "experience": 48490650094,
+        "vocation": "Royal Paladin",
+        "rank": "1."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Luisinho Lowprofile",
+        "level": 1388,
+        "experience": 44381318047,
+        "vocation": "Elder Druid",
+        "rank": "2."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Caioox Lowprofile",
+        "level": 1377,
+        "experience": 43340122346,
+        "vocation": "Elite Knight",
+        "rank": "4."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Gama Lowprofile",
+        "level": 1378,
+        "experience": 43505894360,
+        "vocation": "Master Sorcerer",
+        "rank": "3."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Gts Wayne",
+        "level": 1312,
+        "experience": 37522204981,
+        "vocation": "Elder Druid",
+        "rank": "6."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Dom Lucca Wayne",
+        "level": 1335,
+        "experience": 39517814016,
+        "vocation": "Master Sorcerer",
+        "rank": "5."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Kaiquerah Wayne",
+        "level": 1294,
+        "experience": 36008451546,
+        "vocation": "Royal Paladin",
+        "rank": "7."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Digozao Wayne",
+        "level": 1251,
+        "experience": 32477353994,
+        "vocation": "Elite Knight",
+        "rank": "13."
+    },
+    {
+        "date": "2026-04-05 03:22:01",
+        "name": "Sdds Monk Wayne",
+        "level": 1259,
+        "experience": 33112987474,
+        "vocation": "Elder Druid",
+        "rank": "11."
     }
 ]
