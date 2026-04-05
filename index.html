@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>RubinOT Analytics · Serenian Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -54,11 +55,9 @@
       bottom: 0;
       overflow-y: auto;
       transition: var(--transition);
+      z-index: 10;
     }
-    .sidebar-header { 
-      padding: 28px 24px; 
-      border-bottom: 1px solid var(--border);
-    }
+    .sidebar-header { padding: 28px 24px; border-bottom: 1px solid var(--border); }
     .brand h1 {
       font-size: 28px;
       font-weight: 800;
@@ -68,7 +67,6 @@
       color: transparent;
       margin-bottom: 16px;
     }
-    /* NOVO: Estilo para o badge de última atualização */
     .last-update-badge {
       padding: 10px 12px;
       background: var(--bg-card);
@@ -76,58 +74,19 @@
       border: 1px solid var(--border);
       margin-top: 12px;
     }
-    .update-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-    .update-time {
-      font-family: monospace;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
+    .update-header { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; }
+    .update-time { font-family: monospace; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+    .status-indicator { display: flex; align-items: center; gap: 8px; font-size: 11px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; animation: pulse 2s infinite; }
     .status-dot.green { background: #10b981; }
     .status-dot.yellow { background: #f59e0b; }
     .status-dot.red { background: #ef4444; animation: none; }
-    .next-update-info {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+    .next-update-info { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text-secondary); margin-top: 6px; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
     .sidebar-content { padding: 24px; }
     .filter-section { margin-bottom: 32px; }
     .filter-section h3 { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
-    .period-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
+    .period-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .period-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -138,31 +97,9 @@
       font-size: 12px;
       transition: var(--transition);
     }
-    .period-btn.active, .period-btn:hover {
-      background: var(--accent-primary);
-      color: white;
-      border-color: transparent;
-    }
-    .custom-date-input {
-      margin-top: 12px;
-      width: 100%;
-      padding: 10px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-size: 13px;
-    }
-    .player-select {
-      width: 100%;
-      padding: 12px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-size: 14px;
-      cursor: pointer;
-    }
+    .period-btn.active, .period-btn:hover { background: var(--accent-primary); color: white; border-color: transparent; }
+    .custom-date-input { margin-top: 12px; width: 100%; padding: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 13px; }
+    .player-select { width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 14px; cursor: pointer; }
     .btn-refresh {
       width: 100%;
       background: var(--bg-card);
@@ -176,381 +113,141 @@
       transition: var(--transition);
     }
     .btn-refresh:hover { background: var(--accent-primary); color: white; }
-    .auto-refresh-info {
-      text-align: center;
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-    .refresh-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    .theme-toggle {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .theme-toggle button {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 8px 16px;
-      cursor: pointer;
-      color: var(--text-primary);
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .main {
-      flex: 1;
-      margin-left: 280px;
-      padding: 32px 36px;
-      transition: var(--transition);
-    }
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .main { margin-left: 0; padding: 20px; }
-    }
+    .auto-refresh-info { text-align: center; font-size: 12px; color: var(--text-secondary); }
+    .refresh-dot { display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite; }
+    .theme-toggle { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .theme-toggle button { background: var(--bg-card); border: 1px solid var(--border); border-radius: 40px; padding: 8px 16px; cursor: pointer; color: var(--text-primary); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+    .main { flex: 1; margin-left: 280px; padding: 32px 36px; transition: var(--transition); }
+    @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.mobile-open { transform: translateX(0); } .main { margin-left: 0; padding: 20px; } }
     .tabs-container {
-      margin-bottom: 28px;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      background: var(--bg-elevated);
+      border-radius: 16px;
+      padding: 8px;
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    .tabs-container::-webkit-scrollbar { display: none; }
     .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
       font-size: 15px;
       font-weight: 600;
       color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-radius: 12px;
       cursor: pointer;
-      transition: var(--transition);
-      border-radius: 12px 12px 0 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
     }
-    .tab-btn:hover { color: var(--gold); background: rgba(251,191,36,0.1); }
+    .tab-btn:hover { color: var(--text-primary); background: rgba(251, 191, 36, 0.08); transform: translateY(-1px); }
     .tab-btn.active {
-      color: var(--gold);
-      background: rgba(251,191,36,0.1);
-      border-bottom: 2px solid var(--gold);
+      color: white;
+      background: linear-gradient(135deg, var(--gold), #fcd34d);
+      box-shadow: 0 4px 15px -2px rgba(251, 191, 36, 0.3);
+      font-weight: 700;
     }
-    .tab-content { display: none; }
+    .tab-btn i { font-size: 18px; transition: transform 0.3s ease; }
+    .tab-btn.active i { transform: scale(1.1); }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
     .tab-content.active { display: block; }
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 22px;
-      margin-bottom: 40px;
-    }
-    .kpi-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      border: 1px solid var(--border);
-      transition: var(--transition);
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-bottom: 40px; }
+    .kpi-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; display: flex; align-items: center; gap: 16px; border: 1px solid var(--border); transition: var(--transition); }
     .kpi-card:hover { transform: translateY(-3px); border-color: var(--accent-primary); }
-    .kpi-icon {
-      width: 52px;
-      height: 52px;
-      background: var(--bg-deep);
-      border-radius: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-    }
+    .kpi-icon { width: 52px; height: 52px; background: var(--bg-deep); border-radius: 60px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
     .kpi-value { font-size: 32px; font-weight: 800; }
     .kpi-label { font-size: 12px; color: var(--text-secondary); }
-    .top-players-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-    .top-player-card {
-      background: linear-gradient(145deg, var(--bg-card), #13131c);
-      border-radius: 28px;
-      padding: 24px;
-      border: 1px solid rgba(251, 191, 36, 0.2);
-      cursor: pointer;
-      transition: var(--transition);
-    }
+    .top-players-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
+    .top-player-card { background: linear-gradient(145deg, var(--bg-card), #13131c); border-radius: 28px; padding: 24px; border: 1px solid rgba(251, 191, 36, 0.2); cursor: pointer; transition: var(--transition); }
     .top-player-card:hover { transform: translateY(-5px); border-color: var(--gold); }
-    .top-player-rank {
-      display: inline-block;
-      background: var(--gold);
-      color: #0a0a0f;
-      padding: 5px 14px;
-      border-radius: 40px;
-      font-weight: 800;
-      margin-bottom: 14px;
-    }
+    .top-player-rank { display: inline-block; background: var(--gold); color: #0a0a0f; padding: 5px 14px; border-radius: 40px; font-weight: 800; margin-bottom: 14px; }
     .top-player-name { font-size: 1.7rem; font-weight: 800; }
-    .top-player-stats {
-      display: flex;
-      justify-content: space-between;
-      background: rgba(0,0,0,0.3);
-      padding: 12px;
-      border-radius: 16px;
-      margin: 12px 0;
-    }
-    .charts-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      margin-bottom: 40px;
-    }
-    .chart-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      border: 1px solid var(--border);
-      transition: var(--transition);
-    }
-    .chart-header {
-      margin-bottom: 20px;
-      border-left: 3px solid var(--gold);
-      padding-left: 16px;
-    }
+    .top-player-stats { display: flex; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 16px; margin: 12px 0; }
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 40px; }
+    .chart-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--border); transition: var(--transition); }
+    .chart-header { margin-bottom: 20px; border-left: 3px solid var(--gold); padding-left: 16px; }
     .chart-header h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 4px; }
     .chart-header p { font-size: 12px; color: var(--text-secondary); }
     .chart-container { height: 260px; position: relative; }
-    .ranking-table-container {
-      background: var(--bg-card);
-      border-radius: 24px;
-      overflow-x: auto;
-    }
+    .ranking-table-container { background: var(--bg-card); border-radius: 24px; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 16px 20px; text-align: left; }
     th { background: var(--bg-elevated); color: var(--text-secondary); font-weight: 600; }
     td { border-bottom: 1px solid var(--border); }
     tr:hover td { background: rgba(99,102,241,0.05); }
-    .detailed-players-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
-    }
-    .player-card-detailed {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: var(--transition);
-    }
+    .detailed-players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; margin-top: 20px; }
+    .player-card-detailed { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; transition: var(--transition); }
     .player-card-detailed:hover { transform: translateY(-4px); border-color: var(--gold); }
-    .card-header-detailed {
-      background: var(--bg-elevated);
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .card-header-detailed { background: var(--bg-elevated); padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .player-name-detailed { font-size: 1.3rem; font-weight: 700; color: var(--gold); }
-    .btn-details {
-      background: rgba(99,102,241,0.15);
-      border: 1px solid var(--accent-primary);
-      color: var(--accent-primary);
-      padding: 6px 14px;
-      border-radius: 40px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .btn-details { background: rgba(99,102,241,0.15); border: 1px solid var(--accent-primary); color: var(--accent-primary); padding: 6px 14px; border-radius: 40px; font-size: 12px; font-weight: 600; cursor: pointer; }
     .card-body-detailed { padding: 20px; }
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
     .stat-label { color: var(--text-secondary); font-size: 13px; }
     .stat-value { font-weight: 700; }
     .stat-value-highlight { color: var(--emerald); font-weight: 800; }
-    .badge-up {
-      background: rgba(74,222,128,0.15);
-      padding: 8px;
-      border-radius: 12px;
-      text-align: center;
-      margin-top: 12px;
-      font-size: 12px;
-    }
+    .badge-up { background: rgba(74,222,128,0.15); padding: 8px; border-radius: 12px; text-align: center; margin-top: 12px; font-size: 12px; }
     .empty-state { text-align: center; padding: 40px; color: var(--text-secondary); }
-    .error-box {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #ef4444;
-      padding: 12px 20px;
-      border-radius: 40px;
-      display: none;
-      z-index: 1000;
-    }
-    .simulator-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 28px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .simulator-card h3 {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      color: var(--gold);
-    }
-    .simulator-field {
-      margin-bottom: 20px;
-    }
-    .simulator-field label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-    .simulator-field input, .simulator-field select {
-      width: 100%;
-      padding: 12px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-size: 14px;
-    }
-    .simulator-result {
-      margin-top: 28px;
-      background: var(--bg-elevated);
-      border-radius: 20px;
-      padding: 20px;
-    }
-    .result-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .progress-bar {
-      background: var(--bg-card);
-      border-radius: 20px;
-      height: 20px;
-      overflow: hidden;
-      margin: 15px 0;
-    }
-    .progress-fill {
-      background: linear-gradient(90deg, var(--emerald), var(--gold));
-      width: 0%;
-      height: 100%;
-      border-radius: 20px;
-      transition: width 0.5s;
-    }
-    .stamina-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    .stamina-cards .card {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      text-align: center;
-      border: 1px solid var(--border);
-    }
-    .stamina-cards .card h3 {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-    }
-    .big-number {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--gold);
-    }
-    .section {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      padding: 24px;
-      margin-bottom: 32px;
-    }
-    .section-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--gold);
-      border-left: 3px solid var(--gold);
-      padding-left: 12px;
-    }
-    .stamina-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      align-items: end;
-    }
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .field-group label {
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
-    .field-group input, .field-group select {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      color: var(--text-primary);
-      font-size: 14px;
-    }
-    .btn-success, .btn-secondary {
-      background: var(--accent-primary);
-      border: none;
-      border-radius: 40px;
-      padding: 12px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      color: white;
-    }
-    .btn-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--accent-primary);
-      color: var(--accent-primary);
-    }
-    .btn-success:hover, .btn-secondary:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
-    .resultado-stamina {
-      margin-top: 20px;
-      background: var(--bg-elevated);
-      border-radius: 16px;
-      padding: 16px;
-      font-size: 14px;
-      color: var(--text-primary);
-      text-align: center;
-    }
+    .error-box { position: fixed; bottom: 20px; right: 20px; background: #ef4444; padding: 12px 20px; border-radius: 40px; display: none; z-index: 1000; }
+    .simulator-card, .goal-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 28px; max-width: 800px; margin: 0 auto; }
+    .simulator-card h3, .goal-card h3 { font-size: 1.4rem; margin-bottom: 20px; color: var(--gold); }
+    .simulator-field, .goal-field { margin-bottom: 20px; }
+    .simulator-field label, .goal-field label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-secondary); }
+    .simulator-field input, .simulator-field select, .goal-field input, .goal-field select { width: 100%; padding: 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 14px; }
+    .radio-group { display: flex; gap: 20px; align-items: center; margin-bottom: 20px; }
+    .radio-group label { display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; }
+    .progress-goal { margin-top: 28px; background: var(--bg-elevated); border-radius: 20px; padding: 20px; }
+    .progress-bar-container { background: var(--bg-card); border-radius: 20px; height: 30px; overflow: hidden; margin: 15px 0; }
+    .progress-fill-goal { background: linear-gradient(90deg, var(--emerald), var(--gold)); width: 0%; height: 100%; border-radius: 20px; transition: width 0.5s; }
+    .simulator-result { margin-top: 28px; background: var(--bg-elevated); border-radius: 20px; padding: 20px; }
+    .result-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .progress-bar { background: var(--bg-card); border-radius: 20px; height: 20px; overflow: hidden; margin: 15px 0; }
+    .progress-fill { background: linear-gradient(90deg, var(--emerald), var(--gold)); width: 0%; height: 100%; border-radius: 20px; transition: width 0.5s; }
+    .stamina-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stamina-cards .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; text-align: center; border: 1px solid var(--border); }
+    .stamina-cards .card h3 { font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; }
+    .big-number { font-size: 32px; font-weight: 800; color: var(--gold); }
+    .section { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; margin-bottom: 32px; }
+    .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--gold); border-left: 3px solid var(--gold); padding-left: 12px; }
+    .stamina-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; margin-bottom: 20px; }
+    .field-group { display: flex; flex-direction: column; gap: 8px; }
+    .field-group label { font-size: 13px; color: var(--text-secondary); }
+    .field-group input, .field-group select { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text-primary); font-size: 14px; }
+    .btn-success, .btn-secondary { background: var(--accent-primary); border: none; border-radius: 40px; padding: 12px 20px; font-weight: 600; cursor: pointer; transition: var(--transition); color: white; }
+    .btn-secondary { background: var(--bg-card); border: 1px solid var(--accent-primary); color: var(--accent-primary); }
+    .btn-success:hover, .btn-secondary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+    .resultado-stamina { margin-top: 20px; background: var(--bg-elevated); border-radius: 16px; padding: 16px; font-size: 14px; color: var(--text-primary); text-align: center; }
+    .heatmap-container { margin-top: 30px; background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border); }
+    .heatmap-header { margin-bottom: 20px; border-left: 3px solid var(--gold); padding-left: 16px; }
+    .heatmap-header h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 4px; }
+    .heatmap-header p { font-size: 12px; color: var(--text-secondary); }
+    #activityHeatmap { height: 400px; width: 100%; }
+    .overtake-card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--border); margin-bottom: 30px; }
+    .overtake-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 24px; }
+    .overtake-players { display: flex; gap: 20px; flex-wrap: wrap; }
+    .player-select-box { flex: 1; min-width: 200px; }
+    .overtake-result { background: var(--bg-elevated); border-radius: 20px; padding: 20px; margin: 20px 0; text-align: center; }
+    .days-highlight { font-size: 2rem; font-weight: 800; color: var(--gold); }
+    .suggestion-badge { background: rgba(99,102,241,0.2); border-radius: 40px; padding: 6px 12px; font-size: 12px; cursor: pointer; transition: var(--transition); }
+    .suggestion-badge:hover { background: var(--accent-primary); color: white; }
+    .wow-table-container { overflow-x: auto; background: var(--bg-card); border-radius: 24px; margin-top: 20px; }
+    .trend-up { color: #34d399; }
+    .trend-down { color: #f87171; }
+    .trend-stable { color: #fbbf24; }
     @media (max-width: 700px) {
-      .stamina-grid {
-        grid-template-columns: 1fr;
-      }
+      .stamina-grid { grid-template-columns: 1fr; }
+      .overtake-header { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
@@ -559,12 +256,8 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="brand"><h1>RubinOT</h1></div>
-      <!-- NOVO: Badge de última atualização -->
       <div class="last-update-badge" id="lastUpdateBadge">
-        <div class="update-header">
-          <i class="fas fa-clock"></i>
-          <span>Última coleta</span>
-        </div>
+        <div class="update-header"><i class="fas fa-clock"></i><span>Última coleta</span></div>
         <div class="update-time" id="lastUpdateTime">Carregando...</div>
         <div class="status-indicator" id="statusIndicator">
           <div class="status-dot green" id="statusDot"></div>
@@ -604,12 +297,15 @@
   </aside>
 
   <main class="main">
-    <div class="tabs-container">
-      <button class="tab-btn active" data-tab="tab1"><i class="fas fa-chart-line"></i> Visão Geral</button>
-      <button class="tab-btn" data-tab="tab2"><i class="fas fa-chart-pie"></i> Análise Detalhada</button>
-      <button class="tab-btn" data-tab="tab3"><i class="fas fa-chart-line"></i> Evolução Individual</button>
-      <button class="tab-btn" data-tab="tab4"><i class="fas fa-calculator"></i> Simulador</button>
-      <button class="tab-btn" data-tab="tab5"><i class="fas fa-bolt"></i> Stamina</button>
+    <div class="tabs-container" id="modernTabs">
+      <button class="tab-btn active" data-tab="tab1"><i class="fas fa-chart-line"></i><span>Visão Geral</span></button>
+      <button class="tab-btn" data-tab="tab2"><i class="fas fa-chart-pie"></i><span>Análise Detalhada</span></button>
+      <button class="tab-btn" data-tab="tab3"><i class="fas fa-chart-line"></i><span>Evolução Individual</span></button>
+      <button class="tab-btn" data-tab="tab4"><i class="fas fa-calculator"></i><span>Simulador</span></button>
+      <button class="tab-btn" data-tab="tab5"><i class="fas fa-bolt"></i><span>Stamina</span></button>
+      <button class="tab-btn" data-tab="tab6"><i class="fas fa-chart-line"></i><span>Ultrapassagem</span></button>
+      <button class="tab-btn" data-tab="tab7"><i class="fas fa-fire"></i><span>Crescimento WoW</span></button>
+      <button class="tab-btn" data-tab="tab8"><i class="fas fa-bullseye"></i><span>Meta Personalizada</span></button>
     </div>
 
     <!-- ABA 1 - VISÃO GERAL -->
@@ -618,33 +314,31 @@
         <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-content"><div class="kpi-label">Jogadores</div><div class="kpi-value" id="totalJogadores">0</div></div></div>
         <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-trophy"></i></div><div class="kpi-content"><div class="kpi-label">Maior Level</div><div class="kpi-value" id="maiorLevel">0</div></div></div>
       </div>
-
       <div class="top-players-section">
         <div class="section-header"><h2><i class="fas fa-fire-flame-curved" style="color:var(--gold);"></i> 🔥 Top Ganhadores do Dia</h2></div>
         <div class="top-players-grid" id="topPlayersGrid"><div class="empty-state">Carregando dados...</div></div>
       </div>
-
       <div class="charts-row">
         <div class="chart-card"><div class="chart-header"><h3>📊 Ganho por Jogador</h3><p>Comparativo de XP no período</p></div><div class="chart-container"><canvas id="comparativeBarChart"></canvas></div></div>
         <div class="chart-card"><div class="chart-header"><h3>🥧 Distribuição</h3><p>Participação percentual</p></div><div style="display:flex; gap:20px; flex-wrap:wrap;"><div id="pieLegend" style="flex:1"><div id="legendList"></div></div><div style="flex:1; height:240px;"><canvas id="pieChart"></canvas></div></div></div>
       </div>
-
       <div class="ranking-section"><div class="section-header"><h2>📋 Ranking Completo</h2></div><div class="ranking-table-container"><table><thead><tr><th>#</th><th>Jogador</th><th>Vocação</th><th>Level</th><th>Experiência</th></tr></thead><tbody id="rankingBody"></tbody></table></div></div>
     </div>
 
     <!-- ABA 2 - ANÁLISE DETALHADA -->
-    <div id="tab2" class="tab-content">
-      <div class="detailed-players-grid" id="detailedPlayersGrid"></div>
-    </div>
+    <div id="tab2" class="tab-content"><div class="detailed-players-grid" id="detailedPlayersGrid"></div></div>
 
-    <!-- ABA 3 - EVOLUÇÃO INDIVIDUAL -->
+    <!-- ABA 3 - EVOLUÇÃO INDIVIDUAL + HEATMAP -->
     <div id="tab3" class="tab-content">
       <div class="chart-card" style="margin-bottom:20px;">
         <div class="chart-header"><h3><i class="fas fa-chart-line"></i> Evolução de XP</h3><p>Histórico de experiência do jogador selecionado</p></div>
-        <div style="margin-bottom:20px;">
-          <select id="individualPlayerSelect" class="player-select" style="width:300px;"><option value="">Selecione um jogador</option></select>
-        </div>
+        <div style="margin-bottom:20px;"><select id="individualPlayerSelect" class="player-select" style="width:300px;"><option value="">Selecione um jogador</option></select></div>
         <div class="chart-container" style="height:400px;"><canvas id="lineChart"></canvas></div>
+      </div>
+      <div class="heatmap-container">
+        <div class="heatmap-header"><h3><i class="fas fa-fire"></i> Heatmap de Atividade (XP por dia/hora)</h3><p>Cores mais quentes = mais XP ganho naquele horário e dia da semana</p></div>
+        <div style="position: relative; height: 450px;"><canvas id="activityHeatmap"></canvas></div>
+        <div class="empty-state" id="heatmapEmptyMsg" style="display: none;">Histórico insuficiente para gerar heatmap (necessários pelo menos 2 registros com datas/horas distintas).</div>
       </div>
     </div>
 
@@ -652,24 +346,10 @@
     <div id="tab4" class="tab-content">
       <div class="simulator-card">
         <h3><i class="fas fa-calculator"></i> Simulador de Evolução</h3>
-        <div class="simulator-field">
-          <label><i class="fas fa-user"></i> Jogador (opcional)</label>
-          <select id="simPlayerSelect">
-            <option value="">-- Selecione um jogador para carregar dados --</option>
-          </select>
-        </div>
-        <div class="simulator-field">
-          <label><i class="fas fa-chart-simple"></i> Nível atual</label>
-          <input type="number" id="simLevel" value="1000" step="1">
-        </div>
-        <div class="simulator-field">
-          <label><i class="fas fa-chart-line"></i> Experiência atual</label>
-          <input type="text" id="simExp" value="0">
-        </div>
-        <div class="simulator-field">
-          <label><i class="fas fa-clock"></i> Média de XP por dia</label>
-          <input type="text" id="simAvgDaily" value="1.000.000">
-        </div>
+        <div class="simulator-field"><label><i class="fas fa-user"></i> Jogador (opcional)</label><select id="simPlayerSelect"><option value="">-- Selecione um jogador para carregar dados --</option></select></div>
+        <div class="simulator-field"><label><i class="fas fa-chart-simple"></i> Nível atual</label><input type="number" id="simLevel" value="1000" step="1"></div>
+        <div class="simulator-field"><label><i class="fas fa-chart-line"></i> Experiência atual</label><input type="text" id="simExp" value="0"></div>
+        <div class="simulator-field"><label><i class="fas fa-clock"></i> Média de XP por dia</label><input type="text" id="simAvgDaily" value="1.000.000"></div>
         <button id="calcSimBtn" class="btn-refresh" style="width:100%; margin-top:10px;">Calcular Projeções</button>
         <div class="simulator-result" id="simResult">
           <div class="result-item"><span>📊 XP para próximo level:</span><strong id="xpNeeded">-</strong></div>
@@ -682,7 +362,7 @@
       </div>
     </div>
 
-    <!-- ABA 5 - STAMINA -->
+    <!-- ABA 5 - STAMINA (CORRIGIDA) -->
     <div id="tab5" class="tab-content">
       <div class="stamina-cards">
         <div class="card"><h3>Limite de stamina verde</h3><div class="big-number">39:00</div></div>
@@ -708,6 +388,83 @@
           <button class="btn-secondary" onclick="calcularStaminaNoHorario()">Ver stamina</button>
         </div>
         <div class="resultado-stamina" id="resultadoStaminaHorario">Preencha a stamina atual e o horário desejado.</div>
+      </div>
+    </div>
+
+    <!-- ABA 6 - PREVISÃO DE ULTRAPASSAGEM -->
+    <div id="tab6" class="tab-content">
+      <div class="overtake-card">
+        <div class="overtake-header">
+          <h3><i class="fas fa-chart-line"></i> Previsão de Ultrapassagem</h3>
+          <div id="suggestionsDiv" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+        </div>
+        <div class="overtake-players">
+          <div class="player-select-box"><label><i class="fas fa-user"></i> Jogador A (desafiante)</label><select id="playerA" class="player-select"></select></div>
+          <div class="player-select-box"><label><i class="fas fa-user"></i> Jogador B (alvo)</label><select id="playerB" class="player-select"></select></div>
+        </div>
+        <button id="calcOvertakeBtn" class="btn-refresh" style="margin-top: 20px;">Calcular ultrapassagem</button>
+        <div id="overtakeResult" class="overtake-result" style="display: none;">
+          <div style="font-size: 1.2rem; margin-bottom: 10px;">⚡ <span id="playerAName"></span> vai ultrapassar <span id="playerBName"></span> em</div>
+          <div class="days-highlight" id="daysToOvertake">--</div>
+          <div id="overtakeDetail" style="margin-top: 10px; font-size: 14px;"></div>
+        </div>
+        <div class="chart-container" style="height: 400px; margin-top: 20px;"><canvas id="projectionChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ABA 7 - CRESCIMENTO WoW -->
+    <div id="tab7" class="tab-content">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3><i class="fas fa-chart-line"></i> Taxa de Crescimento (WoW)</h3>
+          <p>Comparação do ganho de XP da semana atual com a semana anterior</p>
+        </div>
+        <div class="wow-table-container">
+          <table style="width:100%">
+            <thead><tr><th>#</th><th>Jogador</th><th>XP Semana Atual</th><th>XP Semana Anterior</th><th>Variação</th><th>Tendência</th></tr></thead>
+            <tbody id="wowTableBody"></tbody>
+          </table>
+        </div>
+        <div id="wowEmptyMsg" class="empty-state" style="display:none;">Dados históricos insuficientes para cálculo WoW (necessário histórico de pelo menos 14 dias).</div>
+      </div>
+    </div>
+
+    <!-- ABA 8 - META PERSONALIZADA -->
+    <div id="tab8" class="tab-content">
+      <div class="goal-card">
+        <h3><i class="fas fa-bullseye"></i> Meta Personalizada</h3>
+        <div class="goal-field">
+          <label><i class="fas fa-user"></i> Jogador</label>
+          <select id="goalPlayerSelect">
+            <option value="">-- Selecione um jogador --</option>
+          </select>
+        </div>
+        <div class="radio-group">
+          <label><input type="radio" name="goalType" value="level" checked> Meta por Nível</label>
+          <label><input type="radio" name="goalType" value="xp"> Meta por XP</label>
+        </div>
+        <div class="goal-field" id="goalLevelField">
+          <label><i class="fas fa-chart-simple"></i> Nível desejado</label>
+          <input type="number" id="goalLevel" value="2000" step="1">
+        </div>
+        <div class="goal-field" id="goalXpField" style="display:none;">
+          <label><i class="fas fa-chart-line"></i> XP desejado</label>
+          <input type="text" id="goalXp" value="1.000.000.000">
+        </div>
+        <div class="goal-field">
+          <label><i class="fas fa-clock"></i> Média de XP por dia (opcional)</label>
+          <input type="text" id="goalAvgDaily" placeholder="Deixe em branco para usar a média real do jogador">
+        </div>
+        <button id="calcGoalBtn" class="btn-refresh" style="width:100%; margin-top:10px;">Calcular Meta</button>
+        <div id="goalResult" class="progress-goal" style="display:none;">
+          <div class="result-item"><span>📍 Situação atual:</span><strong id="goalCurrent">-</strong></div>
+          <div class="result-item"><span>🎯 Meta:</span><strong id="goalTarget">-</strong></div>
+          <div class="progress-bar-container"><div class="progress-fill-goal" id="goalProgressFill"></div></div>
+          <div class="result-item"><span>📊 XP restante:</span><strong id="xpRemaining">-</strong></div>
+          <div class="result-item"><span>⏱️ Média diária utilizada:</span><strong id="avgUsed">-</strong></div>
+          <div class="result-item"><span>📅 Dias estimados:</span><strong id="daysNeededGoal">-</strong></div>
+          <div class="result-item"><span>🗓️ Data prevista:</span><strong id="estimatedDate">-</strong></div>
+        </div>
       </div>
     </div>
   </main>
@@ -747,154 +504,120 @@
     return Math.floor((50/3) * (Math.pow(n,3) - 6*n*n + 17*n - 12));
   }
 
+  function levelParaXp(level) {
+    if (level <= 1) return 0;
+    return Math.floor((50/3) * (Math.pow(level,3) - 6*level*level + 17*level - 12));
+  }
+
   // ==================== DADOS GLOBAIS ====================
   let dadosReais = [];
   let currentPeriod = "tudo";
   let customDate = null;
-  let pieChart, comparativeChart, lineChart;
+  let pieChart, comparativeChart, lineChart, heatmapChart, projectionChart;
   let lastUpdateData = null;
   let nextUpdateEstimate = null;
   const coresPizza = ['#fbbf24', '#6366f1', '#34d399', '#8b5cf6', '#f97316', '#ec4899', '#06b6d4'];
 
-  // ==================== FUNÇÃO PARA ATUALIZAR STATUS ====================
+  // ==================== STATUS ====================
   function atualizarStatusUltimaAtualizacao(lastUpdate, nextEstimate) {
     const lastUpdateElement = document.getElementById('lastUpdateTime');
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
     const nextUpdateElement = document.getElementById('nextUpdateTime');
-    
     if (!lastUpdate || !lastUpdateElement) return;
-    
     const data = new Date(lastUpdate);
     const agora = new Date();
     const diffMinutes = (agora - data) / (1000 * 60);
-    
-    // Formata a data/hora
     const dia = data.getDate().toString().padStart(2, '0');
     const mes = (data.getMonth() + 1).toString().padStart(2, '0');
     const horas = data.getHours().toString().padStart(2, '0');
     const minutos = data.getMinutes().toString().padStart(2, '0');
     const segundos = data.getSeconds().toString().padStart(2, '0');
-    
     lastUpdateElement.textContent = `${dia}/${mes} ${horas}:${minutos}:${segundos}`;
-    
-    // Define o status baseado no tempo desde a última atualização
-    if (diffMinutes <= 35) {
-      // Dados recentes (menos de 35 minutos)
-      statusDot.className = 'status-dot green';
-      statusText.textContent = '✅ Dados atualizados';
-    } else if (diffMinutes <= 60) {
-      // Dados começando a ficar antigos (35-60 minutos)
-      statusDot.className = 'status-dot yellow';
-      statusText.textContent = '⚠️ Aguardando atualização...';
-    } else {
-      // Dados desatualizados (mais de 1 hora)
-      statusDot.className = 'status-dot red';
-      statusText.textContent = '❌ Dados desatualizados!';
-    }
-    
-    // Calcula e exibe a próxima coleta estimada
+    if (diffMinutes <= 35) { statusDot.className = 'status-dot green'; statusText.textContent = '✅ Dados atualizados'; }
+    else if (diffMinutes <= 60) { statusDot.className = 'status-dot yellow'; statusText.textContent = '⚠️ Aguardando atualização...'; }
+    else { statusDot.className = 'status-dot red'; statusText.textContent = '❌ Dados desatualizados!'; }
     if (nextEstimate) {
       const nextDate = new Date(nextEstimate * 1000);
       const now = new Date();
       const diffToNext = (nextDate - now) / (1000 * 60);
-      
-      if (diffToNext > 0 && diffToNext < 60) {
-        const minutosRestantes = Math.floor(diffToNext);
-        const segundosRestantes = Math.floor((diffToNext - minutosRestantes) * 60);
-        nextUpdateElement.textContent = `${minutosRestantes}min ${segundosRestantes}s`;
-      } else if (diffToNext > 0) {
-        const horasRestantes = Math.floor(diffToNext / 60);
-        const minutosRestantes = Math.floor(diffToNext % 60);
-        nextUpdateElement.textContent = `${horasRestantes}h ${minutosRestantes}min`;
-      } else {
-        nextUpdateElement.textContent = "Em breve";
-      }
+      if (diffToNext > 0 && diffToNext < 60) { const minutosRestantes = Math.floor(diffToNext); const segundosRestantes = Math.floor((diffToNext - minutosRestantes) * 60); nextUpdateElement.textContent = `${minutosRestantes}min ${segundosRestantes}s`; }
+      else if (diffToNext > 0) { const horasRestantes = Math.floor(diffToNext / 60); const minutosRestantes = Math.floor(diffToNext % 60); nextUpdateElement.textContent = `${horasRestantes}h ${minutosRestantes}min`; }
+      else { nextUpdateElement.textContent = "Em breve"; }
     } else {
-      // Se não tiver estimativa, calcula baseado no último update + 30 min
       const proxima = new Date(data.getTime() + 30 * 60000);
       const now = new Date();
       const diffToNext = (proxima - now) / (1000 * 60);
-      
-      if (diffToNext > 0 && diffToNext < 60) {
-        const minutosRestantes = Math.floor(diffToNext);
-        nextUpdateElement.textContent = `${minutosRestantes}min`;
-      } else if (diffToNext > 0) {
-        const horasRestantes = Math.floor(diffToNext / 60);
-        nextUpdateElement.textContent = `${horasRestantes}h`;
-      } else {
-        nextUpdateElement.textContent = "Calculando...";
-      }
+      if (diffToNext > 0 && diffToNext < 60) { nextUpdateElement.textContent = `${Math.floor(diffToNext)}min`; }
+      else if (diffToNext > 0) { nextUpdateElement.textContent = `${Math.floor(diffToNext / 60)}h`; }
+      else { nextUpdateElement.textContent = "Calculando..."; }
     }
   }
 
-  // ==================== FUNÇÃO PARA OBTER EXPERIÊNCIA INICIAL DO PERÍODO ====================
-  function getInitialXPForPeriod(playerHistory, period, customDateStr = null) {
-    if (!playerHistory || playerHistory.length === 0) return null;
-    const sorted = [...playerHistory].sort((a,b) => new Date(a.date) - new Date(b.date));
-    let limite = null;
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
+  // ==================== MÉDIA DIÁRIA ====================
+  function calcularMediaDiaria(player) {
+    if (!player.history || player.history.length < 2) return 0;
+    const sorted = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const oldest = sorted[0];
+    const newest = sorted[sorted.length-1];
+    const daysDiff = Math.max(1, (new Date(newest.date) - new Date(oldest.date)) / (1000*60*60*24));
+    const xpGain = newest.experience - oldest.experience;
+    return xpGain / daysDiff;
+  }
+
+  // ==================== CÁLCULO WoW ====================
+  function calcularWow(player) {
+    if (!player.history || player.history.length === 0) return null;
+    const sorted = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const now = new Date();
+    const endCurrent = now;
+    const startCurrent = new Date(now);
+    startCurrent.setDate(now.getDate() - 7);
+    const startPrev = new Date(startCurrent);
+    startPrev.setDate(startCurrent.getDate() - 7);
+    const endPrev = startCurrent;
     
-    if (customDateStr) {
-      const targetDate = new Date(customDateStr);
-      targetDate.setHours(0,0,0,0);
+    function getClosestXP(date, history) {
       let best = null;
-      for (let entry of sorted) {
-        const entryDate = new Date(entry.date);
-        if (entryDate <= targetDate) best = entry;
-        else break;
+      for (let i = history.length-1; i >= 0; i--) {
+        const entryDate = new Date(history[i].date);
+        if (entryDate <= date) { best = history[i].experience; break; }
       }
-      return best ? best.experience : null;
+      return best;
     }
     
-    if (period === "hoje") {
-      limite = hoje;
-    } else if (period === "semana") {
-      limite = new Date(hoje);
-      limite.setDate(hoje.getDate() - 6);
-    } else if (period === "mes") {
-      limite = new Date(hoje);
-      limite.setDate(hoje.getDate() - 29);
-    } else {
-      return sorted[0]?.experience || null;
-    }
+    const xpCurrentEnd = player.experience;
+    const xpCurrentStart = getClosestXP(startCurrent, sorted);
+    const xpPrevEnd = getClosestXP(endPrev, sorted);
+    const xpPrevStart = getClosestXP(startPrev, sorted);
     
-    let initial = null;
-    for (let entry of sorted) {
-      const entryDate = new Date(entry.date);
-      if (entryDate <= limite) initial = entry;
-      else break;
-    }
-    if (!initial && sorted.length) initial = sorted[0];
-    return initial ? initial.experience : null;
+    if (xpCurrentStart === null || xpPrevEnd === null || xpPrevStart === null) return null;
+    const currentGain = Math.max(0, xpCurrentEnd - xpCurrentStart);
+    const prevGain = Math.max(0, xpPrevEnd - xpPrevStart);
+    let percentChange = 0;
+    if (prevGain > 0) percentChange = ((currentGain - prevGain) / prevGain) * 100;
+    else if (currentGain > 0) percentChange = 100;
+    return { currentGain, prevGain, percentChange };
   }
 
-  // ==================== CARREGAR DADOS DO ARQUIVO ====================
+  // ==================== CARREGAR DADOS ====================
   async function carregarDadosDoArquivo() {
     try {
       const response = await fetch('dados_serenian.json?' + Date.now());
       if (!response.ok) throw new Error(`Arquivo não encontrado (${response.status})`);
       const data = await response.json();
-      
-      // Verifica se tem metadados (novo formato)
       let playersData;
       if (data.last_update) {
         lastUpdateData = data.last_update;
         nextUpdateEstimate = data.next_update_estimate;
         playersData = data.players;
-        
-        // Atualiza o status visual
         atualizarStatusUltimaAtualizacao(lastUpdateData, nextUpdateEstimate);
       } else {
-        // Formato antigo (sem metadados)
         playersData = data;
         lastUpdateData = new Date().toISOString().slice(0, 19).replace('T', ' ');
         atualizarStatusUltimaAtualizacao(lastUpdateData, null);
       }
-      
       if (!Array.isArray(playersData) || playersData.length === 0) throw new Error('JSON vazio');
-      
       dadosReais = playersData.map((j, idx) => ({
         rank: j.rank || idx + 1,
         name: j.name || 'Desconhecido',
@@ -903,7 +626,6 @@
         experience: Number(j.experience) || 0,
         history: j.history || []
       }));
-      
       dadosReais.sort((a,b) => b.experience - a.experience);
       dadosReais.forEach((j,i) => j.rank = i+1);
       return true;
@@ -915,26 +637,211 @@
     }
   }
 
-  // ==================== GANHO DO DIA (ÚLTIMAS 24H) ====================
+  // ==================== GANHO DO DIA ====================
   function getDailyGain(player) {
     if (!player.history || player.history.length === 0) return 0;
     const sorted = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
     const currentXP = player.experience;
-    const todayMidnight = new Date();
-    todayMidnight.setHours(0,0,0,0);
+    const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
     let previousXP = null;
     for (let i = sorted.length-1; i >= 0; i--) {
       const entryDate = new Date(sorted[i].date);
-      if (entryDate < todayMidnight) {
-        previousXP = sorted[i].experience;
-        break;
-      }
+      if (entryDate < todayMidnight) { previousXP = sorted[i].experience; break; }
     }
-    if (previousXP === null && sorted.length > 0) {
-      previousXP = sorted[0].experience;
-    }
+    if (previousXP === null && sorted.length > 0) previousXP = sorted[0].experience;
     if (previousXP === null) return 0;
     return Math.max(0, currentXP - previousXP);
+  }
+
+  // ==================== HEATMAP ====================
+  function gerarHeatmap(playerName) {
+    const canvas = document.getElementById('activityHeatmap');
+    const emptyMsg = document.getElementById('heatmapEmptyMsg');
+    if (!canvas) return;
+    const player = dadosReais.find(p => p.name === playerName);
+    if (!player || !player.history || player.history.length < 2) {
+      if (heatmapChart) heatmapChart.destroy();
+      canvas.style.display = 'none';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+    const history = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const gains = [];
+    for (let i = 1; i < history.length; i++) {
+      const prev = history[i-1], curr = history[i];
+      const gain = Math.max(0, curr.experience - prev.experience);
+      if (gain === 0) continue;
+      const currDate = new Date(curr.date);
+      const dayOfWeek = currDate.getDay();
+      const hour = currDate.getHours();
+      gains.push({ day: dayOfWeek, hour, gain });
+    }
+    if (gains.length === 0) {
+      if (heatmapChart) heatmapChart.destroy();
+      canvas.style.display = 'none';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+    const map = new Map();
+    for (const g of gains) {
+      const key = `${g.day}_${g.hour}`;
+      if (!map.has(key)) map.set(key, { total: 0, count: 0 });
+      const entry = map.get(key);
+      entry.total += g.gain;
+      entry.count++;
+    }
+    const dataPoints = [];
+    let maxGain = 0;
+    for (let day = 0; day <= 6; day++) {
+      for (let hour = 0; hour <= 23; hour++) {
+        const key = `${day}_${hour}`;
+        const entry = map.get(key);
+        let avg = entry ? entry.total / entry.count : 0;
+        if (avg > maxGain) maxGain = avg;
+        dataPoints.push({ x: hour, y: day, v: avg });
+      }
+    }
+    const colorStops = (value, max) => {
+      if (max === 0) return '#3b82f6';
+      const ratio = value / max;
+      const r = Math.min(255, Math.floor(255 * ratio));
+      const g = Math.min(255, Math.floor(255 * (1 - Math.abs(ratio - 0.5) * 2)));
+      const b = Math.min(255, Math.floor(255 * (1 - ratio)));
+      return `rgb(${r}, ${g}, ${b})`;
+    };
+    const backgroundColors = dataPoints.map(p => colorStops(p.v, maxGain));
+    if (heatmapChart) heatmapChart.destroy();
+    const weekDays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    canvas.style.display = 'block';
+    emptyMsg.style.display = 'none';
+    heatmapChart = new Chart(canvas, {
+      type: 'matrix',
+      data: { datasets: [{ label: 'Média de XP ganho', data: dataPoints, backgroundColor: backgroundColors, borderWidth: 1, borderColor: '#2a2a35', width: ({ chart }) => (chart.chartArea?.width / 24) - 2, height: ({ chart }) => (chart.chartArea?.height / 7) - 2 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { callbacks: { title: (ctx) => { const point = ctx[0].raw; return `${weekDays[point.y]} - ${point.x}:00h`; }, label: (ctx) => `XP médio: ${Math.floor(ctx.raw.v).toLocaleString('pt-BR')}` } }, legend: { display: false } }, scales: { x: { type: 'linear', position: 'bottom', title: { display: true, text: 'Hora do dia', color: 'var(--text-secondary)' }, ticks: { stepSize: 3, callback: (val) => `${val}:00`, color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } }, y: { type: 'linear', title: { display: true, text: 'Dia da semana', color: 'var(--text-secondary)' }, ticks: { stepSize: 1, callback: (val) => weekDays[val], color: 'var(--text-secondary)' }, grid: { color: 'var(--border)' } } } }
+    });
+  }
+
+  // ==================== PREVISÃO DE ULTRAPASSAGEM ====================
+  function calcularUltrapassagem() {
+    const nameA = document.getElementById('playerA').value;
+    const nameB = document.getElementById('playerB').value;
+    if (!nameA || !nameB || nameA === nameB) { alert('Selecione dois jogadores diferentes.'); return; }
+    const playerA = dadosReais.find(p => p.name === nameA);
+    const playerB = dadosReais.find(p => p.name === nameB);
+    if (!playerA || !playerB) return;
+    const avgA = calcularMediaDiaria(playerA);
+    const avgB = calcularMediaDiaria(playerB);
+    const xpA = playerA.experience;
+    const xpB = playerB.experience;
+    if (xpA >= xpB) {
+      document.getElementById('overtakeResult').style.display = 'block';
+      document.getElementById('daysToOvertake').innerHTML = 'Já ultrapassou!';
+      document.getElementById('playerAName').innerText = playerA.name;
+      document.getElementById('playerBName').innerText = playerB.name;
+      document.getElementById('overtakeDetail').innerHTML = `${playerA.name} já possui mais XP que ${playerB.name}.`;
+      if (projectionChart) projectionChart.destroy();
+      return;
+    }
+    if (avgA <= avgB) {
+      document.getElementById('overtakeResult').style.display = 'block';
+      document.getElementById('daysToOvertake').innerHTML = 'Nunca';
+      document.getElementById('playerAName').innerText = playerA.name;
+      document.getElementById('playerBName').innerText = playerB.name;
+      document.getElementById('overtakeDetail').innerHTML = `${playerA.name} ganha menos XP por dia que ${playerB.name}, portanto não vai ultrapassar.`;
+      if (projectionChart) projectionChart.destroy();
+      return;
+    }
+    const diffXP = xpB - xpA;
+    const diffDaily = avgA - avgB;
+    const days = Math.ceil(diffXP / diffDaily);
+    document.getElementById('overtakeResult').style.display = 'block';
+    document.getElementById('daysToOvertake').innerHTML = `${days} dias`;
+    document.getElementById('playerAName').innerText = playerA.name;
+    document.getElementById('playerBName').innerText = playerB.name;
+    document.getElementById('overtakeDetail').innerHTML = `Com base nas médias diárias:<br>📈 ${playerA.name}: ${Math.floor(avgA).toLocaleString('pt-BR')} XP/dia<br>📉 ${playerB.name}: ${Math.floor(avgB).toLocaleString('pt-BR')} XP/dia<br>Diferença atual: ${diffXP.toLocaleString('pt-BR')} XP`;
+    const maxDays = Math.min(90, days + 30);
+    const labels = [];
+    const projA = []; const projB = [];
+    for (let d = 0; d <= maxDays; d++) { labels.push(`${d}`); projA.push(xpA + avgA * d); projB.push(xpB + avgB * d); }
+    if (projectionChart) projectionChart.destroy();
+    const ctx = document.getElementById('projectionChart').getContext('2d');
+    projectionChart = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ label: `${playerA.name} (projeção)`, data: projA, borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.1)', fill: false, tension: 0.2, pointRadius: 2 }, { label: `${playerB.name} (projeção)`, data: projB, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: false, tension: 0.2, pointRadius: 2 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${Math.floor(ctx.raw).toLocaleString('pt-BR')} XP` } } }, scales: { y: { title: { display: true, text: 'Experiência (XP)', color: 'var(--text-secondary)' }, ticks: { callback: (val) => val.toLocaleString('pt-BR') } }, x: { title: { display: true, text: 'Dias a partir de hoje', color: 'var(--text-secondary)' } } } } });
+  }
+  
+  function sugerirParesProximos() {
+    if (!dadosReais.length) return;
+    const playersWithAvg = dadosReais.map(p => ({ ...p, avg: calcularMediaDiaria(p) }));
+    const suggestionsDiv = document.getElementById('suggestionsDiv');
+    suggestionsDiv.innerHTML = '<span style="font-size:12px; color:var(--text-secondary);">📌 Sugestões:</span>';
+    const pairs = [];
+    for (let i = 0; i < playersWithAvg.length; i++) {
+      for (let j = i+1; j < playersWithAvg.length; j++) {
+        const higher = playersWithAvg[i].experience > playersWithAvg[j].experience ? playersWithAvg[i] : playersWithAvg[j];
+        const lower = playersWithAvg[i].experience > playersWithAvg[j].experience ? playersWithAvg[j] : playersWithAvg[i];
+        if (lower.avg > higher.avg) { pairs.push({ lower: lower.name, higher: higher.name, diff: higher.experience - lower.experience }); }
+      }
+    }
+    pairs.sort((a,b) => a.diff - b.diff);
+    const top3 = pairs.slice(0,3);
+    top3.forEach(p => { const badge = document.createElement('span'); badge.className = 'suggestion-badge'; badge.innerHTML = `${p.lower} → ${p.higher}`; badge.onclick = () => { document.getElementById('playerA').value = p.lower; document.getElementById('playerB').value = p.higher; calcularUltrapassagem(); }; suggestionsDiv.appendChild(badge); });
+  }
+
+  // ==================== META PERSONALIZADA ====================
+  function calcularMeta() {
+    const playerName = document.getElementById('goalPlayerSelect').value;
+    if (!playerName) { alert('Selecione um jogador.'); return; }
+    const player = dadosReais.find(p => p.name === playerName);
+    if (!player) return;
+    const currentLevel = player.level;
+    const currentXP = player.experience;
+    const mediaReal = calcularMediaDiaria(player);
+    
+    const goalType = document.querySelector('input[name="goalType"]:checked').value;
+    let targetXP = 0;
+    if (goalType === 'level') {
+      const targetLevel = parseInt(document.getElementById('goalLevel').value, 10);
+      if (isNaN(targetLevel) || targetLevel <= currentLevel) {
+        alert('Digite um nível maior que o atual.');
+        return;
+      }
+      targetXP = levelParaXp(targetLevel);
+    } else {
+      let targetXPraw = parseFormattedNumber(document.getElementById('goalXp').value);
+      if (isNaN(targetXPraw) || targetXPraw <= currentXP) {
+        alert('Digite um XP maior que o atual.');
+        return;
+      }
+      targetXP = targetXPraw;
+    }
+    
+    let avgDaily = parseFormattedNumber(document.getElementById('goalAvgDaily').value);
+    if (isNaN(avgDaily) || avgDaily <= 0) {
+      avgDaily = mediaReal;
+      if (avgDaily <= 0) {
+        alert('Média diária inválida. Preencha um valor manualmente ou aguarde mais histórico.');
+        return;
+      }
+    }
+    
+    const xpRemaining = targetXP - currentXP;
+    const daysNeeded = Math.ceil(xpRemaining / avgDaily);
+    const estimatedDate = new Date();
+    estimatedDate.setDate(estimatedDate.getDate() + daysNeeded);
+    const percent = Math.min(100, (currentXP / targetXP) * 100);
+    
+    document.getElementById('goalResult').style.display = 'block';
+    document.getElementById('goalCurrent').innerHTML = `${player.name} — Nível ${currentLevel} (${currentXP.toLocaleString('pt-BR')} XP)`;
+    if (goalType === 'level') {
+      const targetLevel = parseInt(document.getElementById('goalLevel').value, 10);
+      document.getElementById('goalTarget').innerHTML = `Nível ${targetLevel} (${targetXP.toLocaleString('pt-BR')} XP)`;
+    } else {
+      document.getElementById('goalTarget').innerHTML = `${targetXP.toLocaleString('pt-BR')} XP`;
+    }
+    document.getElementById('xpRemaining').innerHTML = xpRemaining.toLocaleString('pt-BR');
+    document.getElementById('avgUsed').innerHTML = Math.floor(avgDaily).toLocaleString('pt-BR') + ' XP/dia';
+    document.getElementById('daysNeededGoal').innerHTML = `${daysNeeded} dias`;
+    document.getElementById('estimatedDate').innerHTML = estimatedDate.toLocaleDateString('pt-BR');
+    document.getElementById('goalProgressFill').style.width = `${percent}%`;
   }
 
   // ==================== ATUALIZAR DASHBOARD PRINCIPAL ====================
@@ -945,22 +852,11 @@
     document.getElementById('totalJogadores').innerHTML = totalJogadores;
     document.getElementById('maiorLevel').innerHTML = maiorLevel;
 
-    const playersWithDailyGain = dadosReais.map(player => ({
-      ...player,
-      dailyGain: getDailyGain(player)
-    }));
+    const playersWithDailyGain = dadosReais.map(player => ({ ...player, dailyGain: getDailyGain(player) }));
     playersWithDailyGain.sort((a,b) => b.dailyGain - a.dailyGain);
     const top3Daily = playersWithDailyGain.slice(0,3);
     const topGrid = document.getElementById('topPlayersGrid');
-    topGrid.innerHTML = top3Daily.map((j,idx) => `
-      <div class="top-player-card" onclick="alert('${j.name}\\nLevel: ${j.level}\\nXP: ${j.experience.toLocaleString()}\\nGanho hoje: ${j.dailyGain.toLocaleString()} XP')">
-        <div class="top-player-rank">#${idx+1} ${idx===0?'🏆':idx===1?'🥈':'🥉'}</div>
-        <div class="top-player-name">${j.name}</div>
-        <div style="color:#a5b4fc; margin:8px 0;">${j.vocation}</div>
-        <div class="top-player-stats"><span>⚡ Level</span><span style="color:var(--emerald); font-weight:800;">${j.level}</span></div>
-        <div>📊 XP hoje: <strong style="color:var(--gold);">${j.dailyGain.toLocaleString('pt-BR')}</strong></div>
-      </div>
-    `).join('');
+    topGrid.innerHTML = top3Daily.map((j,idx) => `<div class="top-player-card" onclick="alert('${j.name}\\nLevel: ${j.level}\\nXP: ${j.experience.toLocaleString()}\\nGanho hoje: ${j.dailyGain.toLocaleString()} XP')"><div class="top-player-rank">#${idx+1} ${idx===0?'🏆':idx===1?'🥈':'🥉'}</div><div class="top-player-name">${j.name}</div><div style="color:#a5b4fc; margin:8px 0;">${j.vocation}</div><div class="top-player-stats"><span>⚡ Level</span><span style="color:var(--emerald); font-weight:800;">${j.level}</span></div><div>📊 XP hoje: <strong style="color:var(--gold);">${j.dailyGain.toLocaleString('pt-BR')}</strong></div></div>`).join('');
     if (top3Daily.length === 0) topGrid.innerHTML = '<div class="empty-state">Sem dados de ganho diário</div>';
 
     document.getElementById('rankingBody').innerHTML = dadosReais.map(j=>`<tr><td><strong>#${j.rank}</strong></td><td><i class="fas fa-user"></i> ${j.name}</td><td>${j.vocation}</td><td style="color:#60a5fa;">${j.level}</td><td style="color:var(--emerald);">${j.experience.toLocaleString('pt-BR')}</td></tr>`).join('');
@@ -977,6 +873,7 @@
     pieChart = new Chart(ctxPie, { type: 'pie', data: { labels: topPizza.map(p=>p.name), datasets: [{ data: topPizza.map(p=>p.experience), backgroundColor: coresPizza }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
     document.getElementById('legendList').innerHTML = topPizza.map((p,i)=>`<div style="display:flex; align-items:center; gap:10px;"><div style="width:16px; height:16px; background:${coresPizza[i]}; border-radius:8px;"></div><span>${p.name}</span><span>${((p.experience/totalXP)*100).toFixed(1)}%</span></div>`).join('');
     
+    // Simulador
     const simSelect = document.getElementById('simPlayerSelect');
     simSelect.innerHTML = '<option value="">-- Selecione um jogador --</option>' + dadosReais.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
     simSelect.onchange = () => {
@@ -984,30 +881,77 @@
       if(player) {
         document.getElementById('simLevel').value = player.level;
         document.getElementById('simExp').value = formatNumber(player.experience);
-        let days = 1;
-        if(currentPeriod === "hoje") days = 1;
-        else if(currentPeriod === "semana") days = 7;
-        else if(currentPeriod === "mes") days = 30;
-        else days = 30;
-        const hist = player.history || [];
-        let avgDaily = 0;
-        if(hist.length > 1) {
-          const oldest = hist[0].experience;
-          const newest = hist[hist.length-1].experience;
-          const daysDiff = Math.max(1, (new Date(hist[hist.length-1].date) - new Date(hist[0].date)) / (1000*60*60*24));
-          avgDaily = (newest - oldest) / daysDiff;
-        }
+        let avgDaily = calcularMediaDiaria(player);
         if(avgDaily > 0) document.getElementById('simAvgDaily').value = formatNumber(Math.floor(avgDaily));
         calcularSimulador();
       }
     };
     
+    // Evolução individual
     const individualSelect = document.getElementById('individualPlayerSelect');
     individualSelect.innerHTML = '<option value="">Selecione um jogador</option>' + dadosReais.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
-    individualSelect.onchange = () => { if(individualSelect.value) renderIndividualEvolution(individualSelect.value); };
+    individualSelect.onchange = () => { if(individualSelect.value) { renderIndividualEvolution(individualSelect.value); gerarHeatmap(individualSelect.value); } };
+    
+    // Previsão ultrapassagem
+    const selectA = document.getElementById('playerA');
+    const selectB = document.getElementById('playerB');
+    const optionsHtml = dadosReais.map(p => `<option value="${p.name}">${p.name} (${p.level})</option>`).join('');
+    selectA.innerHTML = optionsHtml;
+    selectB.innerHTML = optionsHtml;
+    sugerirParesProximos();
+    
+    // Meta personalizada
+    const goalSelect = document.getElementById('goalPlayerSelect');
+    goalSelect.innerHTML = '<option value="">-- Selecione um jogador --</option>' + dadosReais.map(p=>`<option value="${p.name}">${p.name} (${p.level})</option>`).join('');
+    goalSelect.onchange = () => {
+      const player = dadosReais.find(p=>p.name === goalSelect.value);
+      if(player) {
+        const avg = calcularMediaDiaria(player);
+        if (avg > 0) document.getElementById('goalAvgDaily').value = formatNumber(Math.floor(avg));
+        else document.getElementById('goalAvgDaily').value = '';
+        document.getElementById('goalLevel').value = player.level + 100;
+        document.getElementById('goalXp').value = formatNumber(player.experience + 100000000);
+      }
+    };
+    
+    // WoW
+    renderWowTable();
     
     const agora = new Date().toLocaleString('pt-BR');
     document.getElementById('refreshTimer').innerHTML = `Auto: 30s · ${agora.slice(0,-3)}`;
+  }
+
+  // ==================== RENDER WoW TABLE ====================
+  function renderWowTable() {
+    const tbody = document.getElementById('wowTableBody');
+    const emptyMsg = document.getElementById('wowEmptyMsg');
+    if (!dadosReais.length) return;
+    const wowData = [];
+    for (const player of dadosReais) {
+      const wow = calcularWow(player);
+      if (wow) {
+        wowData.push({ name: player.name, vocation: player.vocation, rank: player.rank, ...wow });
+      }
+    }
+    if (wowData.length === 0) {
+      tbody.innerHTML = '';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+    emptyMsg.style.display = 'none';
+    wowData.sort((a,b) => b.percentChange - a.percentChange);
+    tbody.innerHTML = wowData.map((p, idx) => {
+      const trendIcon = p.percentChange > 5 ? '<i class="fas fa-arrow-up trend-up"></i> 📈' : (p.percentChange < -5 ? '<i class="fas fa-arrow-down trend-down"></i> 📉' : '<i class="fas fa-minus trend-stable"></i> ➡️');
+      const percentFormatted = p.percentChange.toFixed(1);
+      return `<tr>
+        <td>${idx+1}</td>
+        <td><strong>${p.name}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${p.vocation}</span></td>
+        <td>${p.currentGain.toLocaleString('pt-BR')}</td>
+        <td>${p.prevGain.toLocaleString('pt-BR')}</td>
+        <td class="${p.percentChange > 0 ? 'trend-up' : (p.percentChange < 0 ? 'trend-down' : 'trend-stable')}">${percentFormatted}%</td>
+        <td>${trendIcon}</td>
+      </tr>`;
+    }).join('');
   }
 
   // ==================== EVOLUÇÃO INDIVIDUAL ====================
@@ -1024,24 +968,74 @@
     const dataPoints = history.map(h => h.experience);
     if (lineChart) lineChart.destroy();
     const ctx = document.getElementById('lineChart').getContext('2d');
-    lineChart = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets: [{ label: `${player.name} - XP`, data: dataPoints, borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.1)', fill: true, tension: 0.3 }] },
-      options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toLocaleString('pt-BR')} XP` } } } }
-    });
+    lineChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: `${player.name} - XP`, data: dataPoints, borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.raw.toLocaleString('pt-BR')} XP` } } } } });
   }
 
-  // ==================== ANÁLISE DETALHADA ====================
+  // ==================== ANÁLISE DETALHADA (CORRIGIDA) ====================
+  function getInitialXPForPeriod(playerHistory, period, customDateStr = null) {
+    if (!playerHistory || playerHistory.length === 0) return null;
+    const sorted = [...playerHistory].sort((a, b) => new Date(a.date) - new Date(b.date));
+    let limite = null;
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    if (customDateStr) {
+      const targetDate = new Date(customDateStr);
+      targetDate.setHours(0, 0, 0, 0);
+      let best = null;
+      for (let entry of sorted) {
+        const entryDate = new Date(entry.date);
+        entryDate.setHours(0, 0, 0, 0);
+        if (entryDate <= targetDate) best = entry;
+        else break;
+      }
+      return best ? best.experience : null;
+    }
+
+    if (period === "hoje") limite = hoje;
+    else if (period === "semana") {
+      limite = new Date(hoje);
+      limite.setDate(hoje.getDate() - 6);
+    } else if (period === "mes") {
+      limite = new Date(hoje);
+      limite.setDate(hoje.getDate() - 29);
+    } else {
+      return sorted[0]?.experience || null;
+    }
+
+    let initial = null;
+    for (let entry of sorted) {
+      const entryDate = new Date(entry.date);
+      if (entryDate <= limite) initial = entry;
+      else break;
+    }
+    if (!initial && sorted.length) initial = sorted[0];
+    return initial ? initial.experience : null;
+  }
+
   function renderDetailedAnalysis() {
     const container = document.getElementById('detailedPlayersGrid');
-    if (!dadosReais.length) { container.innerHTML = '<div class="empty-state">Carregando...</div>'; return; }
+    if (!dadosReais.length) {
+      container.innerHTML = '<div class="empty-state">Carregando...</div>';
+      return;
+    }
+
     let days = 1;
-    if (currentPeriod === "hoje") days = 1;
+    if (customDate) {
+      const start = new Date(customDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date();
+      end.setHours(0, 0, 0, 0);
+      days = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+    } else if (currentPeriod === "hoje") days = 1;
     else if (currentPeriod === "semana") days = 7;
     else if (currentPeriod === "mes") days = 30;
     else days = 30;
+
     let playersWithMetrics = dadosReais.map(player => {
-      let initialXP = customDate ? getInitialXPForPeriod(player.history, currentPeriod, customDate) : getInitialXPForPeriod(player.history, currentPeriod);
+      let initialXP = customDate
+        ? getInitialXPForPeriod(player.history, currentPeriod, customDate)
+        : getInitialXPForPeriod(player.history, currentPeriod);
       const hasHistory = (initialXP !== null);
       let xpGain = 0, initialXPDisplay = 0, avgPerDay = 0;
       if (hasHistory) {
@@ -1051,10 +1045,14 @@
       }
       return { ...player, hasHistory, xpGain: Math.max(0, xpGain), initialXP: initialXPDisplay, avgPerDay };
     });
+
     playersWithMetrics.sort((a, b) => b.xpGain - a.xpGain);
     container.innerHTML = playersWithMetrics.map((p, idx) => `
       <div class="player-card-detailed">
-        <div class="card-header-detailed"><span class="player-name-detailed">${p.name}</span><button class="btn-details" onclick="alert('${p.name}\\nLevel: ${p.level}\\nXP: ${p.experience.toLocaleString()}')">Detalhes</button></div>
+        <div class="card-header-detailed">
+          <span class="player-name-detailed">${p.name}</span>
+          <button class="btn-details" onclick="alert('${p.name}\\nLevel: ${p.level}\\nXP: ${p.experience.toLocaleString()}')">Detalhes</button>
+        </div>
         <div class="card-body-detailed">
           <div class="stat-row"><span class="stat-label">Nível atual</span><span class="stat-value">${p.level}</span></div>
           <div class="stat-row"><span class="stat-label">EXP atual</span><span class="stat-value">${p.experience.toLocaleString('pt-BR')}</span></div>
@@ -1074,39 +1072,103 @@
     const expAtual = parseFormattedNumber(document.getElementById('simExp').value);
     const avgDaily = parseFormattedNumber(document.getElementById('simAvgDaily').value);
     if (isNaN(level) || isNaN(expAtual) || isNaN(avgDaily) || avgDaily <= 0) {
-      document.getElementById('xpNeeded').innerText = 'Dados inválidos';
-      document.getElementById('timeToNext').innerText = '-';
-      document.getElementById('level7d').innerText = '-';
-      document.getElementById('level30d').innerText = '-';
-      document.getElementById('level90d').innerText = '-';
-      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('xpNeeded').innerText = 'Dados inválidos'; document.getElementById('timeToNext').innerText = '-'; document.getElementById('level7d').innerText = '-'; document.getElementById('level30d').innerText = '-'; document.getElementById('level90d').innerText = '-'; document.getElementById('progressFill').style.width = '0%';
       return;
     }
     const xpNeeded = xpParaLevel(level+1) - expAtual;
     const daysNeeded = xpNeeded / avgDaily;
-    let timeStr = '';
-    if (xpNeeded <= 0) timeStr = 'Próximo level já alcançado!';
-    else if (daysNeeded < 1) timeStr = `${Math.ceil(daysNeeded * 24)} horas`;
-    else timeStr = `${daysNeeded.toFixed(1)} dias`;
+    let timeStr = ''; if (xpNeeded <= 0) timeStr = 'Próximo level já alcançado!'; else if (daysNeeded < 1) timeStr = `${Math.ceil(daysNeeded * 24)} horas`; else timeStr = `${daysNeeded.toFixed(1)} dias`;
     const totalXpForNext = xpParaLevel(level+1) - xpParaLevel(level);
     const currentProgress = expAtual - xpParaLevel(level);
     const percent = Math.min(100, Math.max(0, (currentProgress / totalXpForNext) * 100));
     let level7d = level, level30d = level, level90d = level;
     let expProj = expAtual;
     for(let i=0; i<7; i++) { expProj += avgDaily; while(expProj >= xpParaLevel(level7d+1)) level7d++; }
-    expProj = expAtual;
-    for(let i=0; i<30; i++) { expProj += avgDaily; while(expProj >= xpParaLevel(level30d+1)) level30d++; }
-    expProj = expAtual;
-    for(let i=0; i<90; i++) { expProj += avgDaily; while(expProj >= xpParaLevel(level90d+1)) level90d++; }
-    document.getElementById('xpNeeded').innerHTML = formatNumber(xpNeeded);
-    document.getElementById('timeToNext').innerHTML = timeStr;
-    document.getElementById('level7d').innerHTML = level7d;
-    document.getElementById('level30d').innerHTML = level30d;
-    document.getElementById('level90d').innerHTML = level90d;
-    document.getElementById('progressFill').style.width = `${percent}%`;
+    expProj = expAtual; for(let i=0; i<30; i++) { expProj += avgDaily; while(expProj >= xpParaLevel(level30d+1)) level30d++; }
+    expProj = expAtual; for(let i=0; i<90; i++) { expProj += avgDaily; while(expProj >= xpParaLevel(level90d+1)) level90d++; }
+    document.getElementById('xpNeeded').innerHTML = formatNumber(xpNeeded); document.getElementById('timeToNext').innerHTML = timeStr; document.getElementById('level7d').innerHTML = level7d; document.getElementById('level30d').innerHTML = level30d; document.getElementById('level90d').innerHTML = level90d; document.getElementById('progressFill').style.width = `${percent}%`;
   }
 
-  // ==================== POPULAR SELECT JOGADORES (FILTRO) ====================
+  // ==================== STAMINA ====================
+  function setupStaminaInput(inputId) {
+    const input = document.getElementById(inputId); if (!input) return;
+    function formatStaminaDisplay(value) { let digits = value.replace(/\D/g, ''); if (digits.length === 0) return ''; if (digits.length > 4) digits = digits.slice(0,4); let horas = digits.slice(0, -2); let minutos = digits.slice(-2); if (horas === '') horas = '0'; let horasNum = parseInt(horas, 10); if (isNaN(horasNum)) horasNum = 0; horas = horasNum.toString(); return `${horas}:${minutos}`; }
+    input.addEventListener('input', function(e) { let formatted = formatStaminaDisplay(this.value); this.value = formatted; });
+    input.addEventListener('blur', function(e) { if (this.value && !this.value.includes(':')) { this.value = formatStaminaDisplay(this.value); } if (this.value.includes(':')) { let parts = this.value.split(':'); if (parts[1] && parts[1].length === 1) parts[1] = '0' + parts[1]; this.value = parts.join(':'); } });
+  }
+  function parseStamina(timeStr) { if (!timeStr || !timeStr.includes(':')) return NaN; const [h, m] = timeStr.split(':').map(Number); if (isNaN(h) || isNaN(m)) return NaN; return h * 60 + m; }
+  function formatStamina(minutes) { const h = Math.floor(minutes / 60); const m = minutes % 60; return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`; }
+  function getMinutesPerStaminaPoint(staminaAtual, condicao) { const isGreen = staminaAtual >= 39 * 60; if (condicao === 'offline') return isGreen ? 6 : 3; if (condicao === 'trainer') return 6; if (condicao === 'pz') return isGreen ? 5 : 3; return 6; }
+  function calcularStamina() { const staminaAtualStr = document.getElementById('staminaAtual').value; const staminaMaxStr = document.getElementById('staminaMax').value; const condicao = document.getElementById('condicao').value; const staminaAtual = parseStamina(staminaAtualStr); const staminaMax = parseStamina(staminaMaxStr); const resultDiv = document.getElementById('resultadoStamina'); const resumoDiv = document.getElementById('staminaResumo'); if (isNaN(staminaAtual) || isNaN(staminaMax)) { resultDiv.innerHTML = 'Preencha a stamina atual e máxima no formato HH:MM (ex: 38:18).'; resumoDiv.innerHTML = '--'; return; } if (staminaAtual < 0 || staminaAtual > staminaMax) { resultDiv.innerHTML = 'Stamina atual inválida (deve estar entre 00:00 e a stamina máxima).'; resumoDiv.innerHTML = '--'; return; } if (staminaAtual >= staminaMax) { resultDiv.innerHTML = 'Sua stamina já está no máximo!'; resumoDiv.innerHTML = '00:00'; return; } let deficit = staminaMax - staminaAtual; let tempoTotalMin = 0; let staminaTemp = staminaAtual; while (deficit > 0) { const minsPerPoint = getMinutesPerStaminaPoint(staminaTemp, condicao); tempoTotalMin += minsPerPoint; staminaTemp++; deficit--; } const horas = Math.floor(tempoTotalMin / 60); const minutos = tempoTotalMin % 60; const tempoStr = `${horas}h ${minutos}min`; resultDiv.innerHTML = `⏱️ Tempo necessário para atingir a stamina máxima (${staminaMaxStr}): <strong>${tempoStr}</strong>.`; resumoDiv.innerHTML = tempoStr; }
+  function calcularStaminaNoHorario() { const staminaAtualStr = document.getElementById('staminaAtualHorario').value; const horarioAlvo = document.getElementById('horarioAlvo').value; const condicao = document.getElementById('condicaoHorario').value; const resultado = document.getElementById('resultadoStaminaHorario'); if (!staminaAtualStr || !staminaAtualStr.includes(':')) { resultado.innerHTML = 'Digite a stamina atual no formato <b>HH:MM</b>.'; return; } if (!horarioAlvo) { resultado.innerHTML = 'Selecione o horário desejado.'; return; } let staminaAtual = parseStamina(staminaAtualStr); const staminaMax = 42 * 60; if (isNaN(staminaAtual) || staminaAtual < 0 || staminaAtual > staminaMax) { resultado.innerHTML = 'Stamina atual inválida (use HH:MM entre 00:00 e 42:00).'; return; } const agora = new Date(); const [horaAlvo, minutoAlvo] = horarioAlvo.split(':').map(Number); const alvo = new Date(); alvo.setHours(horaAlvo, minutoAlvo, 0, 0); if (alvo <= agora) alvo.setDate(alvo.getDate() + 1); const diferencaMinutos = Math.floor((alvo - agora) / 60000); if (diferencaMinutos <= 0) { resultado.innerHTML = 'O horário informado já passou ou é inválido.'; return; } let stamina = staminaAtual; let tempoDecorrido = 0; while (tempoDecorrido < diferencaMinutos && stamina < staminaMax) { const minsPerPoint = getMinutesPerStaminaPoint(stamina, condicao); if (tempoDecorrido + minsPerPoint <= diferencaMinutos) { tempoDecorrido += minsPerPoint; stamina++; } else break; } if (stamina > staminaMax) stamina = staminaMax; const staminaFinal = formatStamina(stamina); const horasAte = Math.floor(diferencaMinutos / 60); const minsAte = diferencaMinutos % 60; resultado.innerHTML = `⏰ Horário escolhido: <b>${horarioAlvo}</b><br>⌛ Tempo até lá: <b>${horasAte}h ${minsAte}min</b><br><br>🔋 Sua stamina estimada será:<br><b>${staminaFinal}</b>`; }
+
+  // ==================== CONFIGURAÇÕES INICIAIS ====================
+  function setupCustomDate() { const dateInput = document.getElementById('customDate'); dateInput.addEventListener('change', () => { customDate = dateInput.value || null; renderDetailedAnalysis(); }); }
+  function initTheme() { const savedTheme = localStorage.getItem('theme'); if (savedTheme === 'light') document.body.classList.add('light-mode'); document.getElementById('themeToggleBtn').addEventListener('click', () => { document.body.classList.toggle('light-mode'); localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); }); }
+  function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        const tabId = tab.dataset.tab;
+        const content = document.getElementById(tabId);
+        if (content) content.classList.add('active');
+        if (tabId === 'tab3' && document.getElementById('individualPlayerSelect').value) {
+          const playerName = document.getElementById('individualPlayerSelect').value;
+          renderIndividualEvolution(playerName);
+          gerarHeatmap(playerName);
+        }
+        if (tabId === 'tab2') renderDetailedAnalysis();
+        if (tabId === 'tab6') sugerirParesProximos();
+        if (tabId === 'tab7') renderWowTable();
+        if (tabId === 'tab4') calcularSimulador();
+      });
+    });
+  }
+  function setupGoalRadios() {
+    const radios = document.querySelectorAll('input[name="goalType"]');
+    const levelField = document.getElementById('goalLevelField');
+    const xpField = document.getElementById('goalXpField');
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'level') {
+          levelField.style.display = 'block';
+          xpField.style.display = 'none';
+        } else {
+          levelField.style.display = 'none';
+          xpField.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  let contadorInterval;
+  function iniciarContadorAtualizacao() { if (contadorInterval) clearInterval(contadorInterval); contadorInterval = setInterval(() => { if (lastUpdateData) { atualizarStatusUltimaAtualizacao(lastUpdateData, nextUpdateEstimate); } }, 1000); }
+
+  let intervaloId;
+  async function inicializar() {
+    const ok = await carregarDadosDoArquivo();
+    if (ok) {
+      atualizarDashboard(); renderDetailedAnalysis(); popularSelectJogadores(); initTabs(); initTheme(); setupCustomDate(); setupFormattedInput('simExp'); setupFormattedInput('simAvgDaily'); setupFormattedInput('goalXp'); setupFormattedInput('goalAvgDaily');
+      setupStaminaInput('staminaAtual'); setupStaminaInput('staminaMax'); setupStaminaInput('staminaAtualHorario');
+      setupGoalRadios();
+      document.getElementById('calcSimBtn').addEventListener('click', calcularSimulador);
+      document.getElementById('calcOvertakeBtn').addEventListener('click', calcularUltrapassagem);
+      document.getElementById('calcGoalBtn').addEventListener('click', calcularMeta);
+      calcularSimulador();
+      iniciarContadorAtualizacao();
+      if (intervaloId) clearInterval(intervaloId);
+      intervaloId = setInterval(async () => {
+        await carregarDadosDoArquivo();
+        atualizarDashboard(); renderDetailedAnalysis(); popularSelectJogadores();
+        const selectedPlayer = document.getElementById('individualPlayerSelect').value;
+        if (selectedPlayer) { renderIndividualEvolution(selectedPlayer); gerarHeatmap(selectedPlayer); }
+      }, 30000);
+    }
+  }
+  
   function popularSelectJogadores() {
     const select = document.getElementById('filtroPlayer');
     select.innerHTML = '<option value="todos">Todos os jogadores</option>' + dadosReais.map(j => `<option value="${j.name}">${j.name}</option>`).join('');
@@ -1115,253 +1177,19 @@
       if (nome === 'todos') { atualizarDashboard(); renderDetailedAnalysis(); return; }
       const j = dadosReais.find(p => p.name === nome);
       if (j) {
-        document.getElementById('totalJogadores').innerHTML = '1';
-        document.getElementById('maiorLevel').innerHTML = j.level;
+        document.getElementById('totalJogadores').innerHTML = '1'; document.getElementById('maiorLevel').innerHTML = j.level;
         document.getElementById('rankingBody').innerHTML = `<tr><td><strong>#${j.rank}</strong></td><td><i class="fas fa-user"></i> ${j.name}</td><td>${j.vocation}</td><td style="color:#60a5fa;">${j.level}</td><td style="color:var(--emerald);">${j.experience.toLocaleString('pt-BR')}</td></tr>`;
-        if (comparativeChart) comparativeChart.destroy();
-        const ctx = document.getElementById('comparativeBarChart').getContext('2d');
-        comparativeChart = new Chart(ctx, { type: 'bar', data: { labels: [j.name], datasets: [{ label: 'XP', data: [j.experience], backgroundColor: '#fbbf24' }] }, options: { responsive: true } });
-        if (pieChart) pieChart.destroy();
-        const ctxPie = document.getElementById('pieChart').getContext('2d');
-        pieChart = new Chart(ctxPie, { type: 'pie', data: { labels: [j.name], datasets: [{ data: [j.experience], backgroundColor: ['#fbbf24'] }] }, options: { responsive: true } });
+        if (comparativeChart) comparativeChart.destroy(); const ctx = document.getElementById('comparativeBarChart').getContext('2d'); comparativeChart = new Chart(ctx, { type: 'bar', data: { labels: [j.name], datasets: [{ label: 'XP', data: [j.experience], backgroundColor: '#fbbf24' }] }, options: { responsive: true } });
+        if (pieChart) pieChart.destroy(); const ctxPie = document.getElementById('pieChart').getContext('2d'); pieChart = new Chart(ctxPie, { type: 'pie', data: { labels: [j.name], datasets: [{ data: [j.experience], backgroundColor: ['#fbbf24'] }] }, options: { responsive: true } });
         document.getElementById('legendList').innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><div style="width:16px; height:16px; background:#fbbf24; border-radius:8px;"></div><span>${j.name}</span><span>100%</span></div>`;
-        const topGrid = document.getElementById('topPlayersGrid');
-        topGrid.innerHTML = `<div class="top-player-card"><div class="top-player-rank">#1 🏆</div><div class="top-player-name">${j.name}</div><div style="color:#a5b4fc; margin:8px 0;">${j.vocation}</div><div class="top-player-stats"><span>⚡ Level</span><span style="color:var(--emerald); font-weight:800;">${j.level}</span></div><div>📊 Ganho hoje: <strong style="color:var(--gold);">${getDailyGain(j).toLocaleString('pt-BR')}</strong></div></div>`;
+        const topGrid = document.getElementById('topPlayersGrid'); topGrid.innerHTML = `<div class="top-player-card"><div class="top-player-rank">#1 🏆</div><div class="top-player-name">${j.name}</div><div style="color:#a5b4fc; margin:8px 0;">${j.vocation}</div><div class="top-player-stats"><span>⚡ Level</span><span style="color:var(--emerald); font-weight:800;">${j.level}</span></div><div>📊 Ganho hoje: <strong style="color:var(--gold);">${getDailyGain(j).toLocaleString('pt-BR')}</strong></div></div>`;
         renderDetailedAnalysis();
       }
     };
   }
-
-  // ==================== STAMINA ====================
-  function setupStaminaInput(inputId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-    function formatStaminaDisplay(value) {
-      let digits = value.replace(/\D/g, '');
-      if (digits.length === 0) return '';
-      if (digits.length > 4) digits = digits.slice(0,4);
-      let horas = digits.slice(0, -2);
-      let minutos = digits.slice(-2);
-      if (horas === '') horas = '0';
-      let horasNum = parseInt(horas, 10);
-      if (isNaN(horasNum)) horasNum = 0;
-      horas = horasNum.toString();
-      return `${horas}:${minutos}`;
-    }
-    input.addEventListener('input', function(e) {
-      let formatted = formatStaminaDisplay(this.value);
-      this.value = formatted;
-    });
-    input.addEventListener('blur', function(e) {
-      if (this.value && !this.value.includes(':')) {
-        this.value = formatStaminaDisplay(this.value);
-      }
-      if (this.value.includes(':')) {
-        let parts = this.value.split(':');
-        if (parts[1] && parts[1].length === 1) parts[1] = '0' + parts[1];
-        this.value = parts.join(':');
-      }
-    });
-  }
-
-  function parseStamina(timeStr) {
-    if (!timeStr || !timeStr.includes(':')) return NaN;
-    const [h, m] = timeStr.split(':').map(Number);
-    if (isNaN(h) || isNaN(m)) return NaN;
-    return h * 60 + m;
-  }
-
-  function formatStamina(minutes) {
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
-  }
-
-  function getMinutesPerStaminaPoint(staminaAtual, condicao) {
-    const isGreen = staminaAtual >= 39 * 60;
-    if (condicao === 'offline') return isGreen ? 6 : 3;
-    if (condicao === 'trainer') return 6;
-    if (condicao === 'pz') return isGreen ? 5 : 3;
-    return 6;
-  }
-
-  function calcularStamina() {
-    const staminaAtualStr = document.getElementById('staminaAtual').value;
-    const staminaMaxStr = document.getElementById('staminaMax').value;
-    const condicao = document.getElementById('condicao').value;
-    const staminaAtual = parseStamina(staminaAtualStr);
-    const staminaMax = parseStamina(staminaMaxStr);
-    const resultDiv = document.getElementById('resultadoStamina');
-    const resumoDiv = document.getElementById('staminaResumo');
-    if (isNaN(staminaAtual) || isNaN(staminaMax)) {
-      resultDiv.innerHTML = 'Preencha a stamina atual e máxima no formato HH:MM (ex: 38:18).';
-      resumoDiv.innerHTML = '--';
-      return;
-    }
-    if (staminaAtual < 0 || staminaAtual > staminaMax) {
-      resultDiv.innerHTML = 'Stamina atual inválida (deve estar entre 00:00 e a stamina máxima).';
-      resumoDiv.innerHTML = '--';
-      return;
-    }
-    if (staminaAtual >= staminaMax) {
-      resultDiv.innerHTML = 'Sua stamina já está no máximo!';
-      resumoDiv.innerHTML = '00:00';
-      return;
-    }
-    let deficit = staminaMax - staminaAtual;
-    let tempoTotalMin = 0;
-    let staminaTemp = staminaAtual;
-    while (deficit > 0) {
-      const minsPerPoint = getMinutesPerStaminaPoint(staminaTemp, condicao);
-      tempoTotalMin += minsPerPoint;
-      staminaTemp++;
-      deficit--;
-    }
-    const horas = Math.floor(tempoTotalMin / 60);
-    const minutos = tempoTotalMin % 60;
-    const tempoStr = `${horas}h ${minutos}min`;
-    resultDiv.innerHTML = `⏱️ Tempo necessário para atingir a stamina máxima (${staminaMaxStr}): <strong>${tempoStr}</strong>.`;
-    resumoDiv.innerHTML = tempoStr;
-  }
-
-  function calcularStaminaNoHorario() {
-    const staminaAtualStr = document.getElementById('staminaAtualHorario').value;
-    const horarioAlvo = document.getElementById('horarioAlvo').value;
-    const condicao = document.getElementById('condicaoHorario').value;
-    const resultado = document.getElementById('resultadoStaminaHorario');
-    if (!staminaAtualStr || !staminaAtualStr.includes(':')) {
-      resultado.innerHTML = 'Digite a stamina atual no formato <b>HH:MM</b>.';
-      return;
-    }
-    if (!horarioAlvo) {
-      resultado.innerHTML = 'Selecione o horário desejado.';
-      return;
-    }
-    let staminaAtual = parseStamina(staminaAtualStr);
-    const staminaMax = 42 * 60;
-    if (isNaN(staminaAtual) || staminaAtual < 0 || staminaAtual > staminaMax) {
-      resultado.innerHTML = 'Stamina atual inválida (use HH:MM entre 00:00 e 42:00).';
-      return;
-    }
-    const agora = new Date();
-    const [horaAlvo, minutoAlvo] = horarioAlvo.split(':').map(Number);
-    const alvo = new Date();
-    alvo.setHours(horaAlvo, minutoAlvo, 0, 0);
-    if (alvo <= agora) alvo.setDate(alvo.getDate() + 1);
-    const diferencaMinutos = Math.floor((alvo - agora) / 60000);
-    if (diferencaMinutos <= 0) {
-      resultado.innerHTML = 'O horário informado já passou ou é inválido.';
-      return;
-    }
-    let stamina = staminaAtual;
-    let tempoDecorrido = 0;
-    while (tempoDecorrido < diferencaMinutos && stamina < staminaMax) {
-      const minsPerPoint = getMinutesPerStaminaPoint(stamina, condicao);
-      if (tempoDecorrido + minsPerPoint <= diferencaMinutos) {
-        tempoDecorrido += minsPerPoint;
-        stamina++;
-      } else break;
-    }
-    if (stamina > staminaMax) stamina = staminaMax;
-    const staminaFinal = formatStamina(stamina);
-    const horasAte = Math.floor(diferencaMinutos / 60);
-    const minsAte = diferencaMinutos % 60;
-    resultado.innerHTML = `⏰ Horário escolhido: <b>${horarioAlvo}</b><br>⌛ Tempo até lá: <b>${horasAte}h ${minsAte}min</b><br><br>🔋 Sua stamina estimada será:<br><b>${staminaFinal}</b>`;
-  }
-
-  // ==================== CONFIGURAÇÕES ====================
-  function setupCustomDate() {
-    const dateInput = document.getElementById('customDate');
-    dateInput.addEventListener('change', () => {
-      customDate = dateInput.value || null;
-      renderDetailedAnalysis();
-    });
-  }
-
-  function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') document.body.classList.add('light-mode');
-    document.getElementById('themeToggleBtn').addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
-      localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-    });
-  }
-
-  function initTabs() {
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-        tab.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-        document.getElementById(tab.dataset.tab).classList.add('active');
-        if (tab.dataset.tab === 'tab3' && document.getElementById('individualPlayerSelect').value) renderIndividualEvolution(document.getElementById('individualPlayerSelect').value);
-        if (tab.dataset.tab === 'tab4') calcularSimulador();
-        if (tab.dataset.tab === 'tab2') renderDetailedAnalysis();
-      });
-    });
-  }
-
-  // Atualização periódica do contador (a cada segundo)
-  let contadorInterval;
-  function iniciarContadorAtualizacao() {
-    if (contadorInterval) clearInterval(contadorInterval);
-    contadorInterval = setInterval(() => {
-      if (lastUpdateData) {
-        atualizarStatusUltimaAtualizacao(lastUpdateData, nextUpdateEstimate);
-      }
-    }, 1000);
-  }
-
-  let intervaloId;
-  async function inicializar() {
-    const ok = await carregarDadosDoArquivo();
-    if (ok) {
-      atualizarDashboard();
-      renderDetailedAnalysis();
-      popularSelectJogadores();
-      initTabs();
-      initTheme();
-      setupCustomDate();
-      setupFormattedInput('simExp');
-      setupFormattedInput('simAvgDaily');
-      setupStaminaInput('staminaAtual');
-      setupStaminaInput('staminaMax');
-      setupStaminaInput('staminaAtualHorario');
-      document.getElementById('calcSimBtn').addEventListener('click', calcularSimulador);
-      calcularSimulador();
-      
-      // Inicia o contador para atualizar o tempo restante
-      iniciarContadorAtualizacao();
-      
-      if (intervaloId) clearInterval(intervaloId);
-      intervaloId = setInterval(async () => {
-        await carregarDadosDoArquivo();
-        atualizarDashboard();
-        renderDetailedAnalysis();
-        popularSelectJogadores();
-      }, 30000);
-    }
-  }
   
-  document.getElementById('refreshBtn').addEventListener('click', async () => {
-    const btn = document.getElementById('refreshBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Atualizando...';
-    await inicializar();
-    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar agora';
-  });
-  
-  document.querySelectorAll('#periodButtons .period-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#periodButtons .period-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      currentPeriod = btn.dataset.period;
-      customDate = null;
-      document.getElementById('customDate').value = '';
-      atualizarDashboard();
-      renderDetailedAnalysis();
-    });
-  });
+  document.getElementById('refreshBtn').addEventListener('click', async () => { const btn = document.getElementById('refreshBtn'); btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Atualizando...'; await inicializar(); btn.innerHTML = '<i class="fas fa-sync-alt"></i> Atualizar agora'; });
+  document.querySelectorAll('#periodButtons .period-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('#periodButtons .period-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentPeriod = btn.dataset.period; customDate = null; document.getElementById('customDate').value = ''; atualizarDashboard(); renderDetailedAnalysis(); }); });
   
   inicializar();
 </script>
