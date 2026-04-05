@@ -1,7 +1,7 @@
 {
-    "last_update": "2026-04-05 18:45:05",
-    "last_update_timestamp": 1775425589,
-    "next_update_estimate": 1775427389.969287,
+    "last_update": "2026-04-05 19:13:47",
+    "last_update_timestamp": 1775427313,
+    "next_update_estimate": 1775429113.543346,
     "players": [
         {
             "name": "Kaiquerah Lowprofile",
@@ -9,7 +9,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -18,7 +18,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -27,7 +27,7 @@
             "vocation": "Elite Knight",
             "level": 1379,
             "experience": 43530444011,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": [
                 {
                     "date": "2026-04-05 16:39:14",
@@ -53,6 +53,11 @@
                     "date": "2026-04-05 18:45:05",
                     "experience": 43530444011,
                     "level": 1379
+                },
+                {
+                    "date": "2026-04-05 19:13:47",
+                    "experience": 43530444011,
+                    "level": 1379
                 }
             ]
         },
@@ -62,7 +67,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": [
                 {
                     "date": "2026-04-05 16:39:14",
@@ -77,7 +82,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -86,7 +91,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -95,7 +100,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -104,7 +109,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": []
         },
         {
@@ -113,7 +118,7 @@
             "vocation": "Elder Druid",
             "level": 1264,
             "experience": 33526347472,
-            "scrape_date": "2026-04-05 18:45:05",
+            "scrape_date": "2026-04-05 19:13:47",
             "history": [
                 {
                     "date": "2026-04-05 16:39:14",
@@ -137,6 +142,11 @@
                 },
                 {
                     "date": "2026-04-05 18:45:05",
+                    "experience": 33526347472,
+                    "level": 1264
+                },
+                {
+                    "date": "2026-04-05 19:13:47",
                     "experience": 33526347472,
                     "level": 1264
                 }
