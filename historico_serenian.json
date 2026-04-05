@@ -6222,5 +6222,29 @@
         "experience": 33526347472,
         "vocation": "Elder Druid",
         "rank": "10."
+    },
+    {
+        "date": "2026-04-05 16:07:42",
+        "name": "Caioox Lowprofile",
+        "level": 1379,
+        "experience": 43530444011,
+        "vocation": "Elite Knight",
+        "rank": "4."
+    },
+    {
+        "date": "2026-04-05 16:07:42",
+        "name": "Gama Lowprofile",
+        "level": 1381,
+        "experience": 43761905579,
+        "vocation": "Master Sorcerer",
+        "rank": "3."
+    },
+    {
+        "date": "2026-04-05 16:07:42",
+        "name": "Sdds Monk Wayne",
+        "level": 1264,
+        "experience": 33526347472,
+        "vocation": "Elder Druid",
+        "rank": "10."
     }
 ]

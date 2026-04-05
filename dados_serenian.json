@@ -1,7 +1,7 @@
 {
-    "last_update": "2026-04-05 15:36:14",
-    "last_update_timestamp": 1775414259,
-    "next_update_estimate": 1775416059.784843,
+    "last_update": "2026-04-05 16:07:42",
+    "last_update_timestamp": 1775416149,
+    "next_update_estimate": 1775417949.622671,
     "players": [
         {
             "name": "Kaiquerah Lowprofile",
@@ -9,7 +9,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -459,7 +459,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -909,7 +909,7 @@
             "vocation": "Elite Knight",
             "level": 1379,
             "experience": 43530444011,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -1355,6 +1355,11 @@
                     "date": "2026-04-05 15:36:14",
                     "experience": 43530444011,
                     "level": 1379
+                },
+                {
+                    "date": "2026-04-05 16:07:42",
+                    "experience": 43530444011,
+                    "level": 1379
                 }
             ]
         },
@@ -1364,7 +1369,7 @@
             "vocation": "Master Sorcerer",
             "level": 1381,
             "experience": 43761905579,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -1810,6 +1815,11 @@
                     "date": "2026-04-05 15:36:14",
                     "experience": 43761905579,
                     "level": 1381
+                },
+                {
+                    "date": "2026-04-05 16:07:42",
+                    "experience": 43761905579,
+                    "level": 1381
                 }
             ]
         },
@@ -1819,7 +1829,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -2269,7 +2279,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -2719,7 +2729,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -3169,7 +3179,7 @@
             "vocation": "",
             "level": 0,
             "experience": 0,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:18:47",
@@ -3619,7 +3629,7 @@
             "vocation": "Elder Druid",
             "level": 1264,
             "experience": 33526347472,
-            "scrape_date": "2026-04-05 15:36:14",
+            "scrape_date": "2026-04-05 16:07:42",
             "history": [
                 {
                     "date": "2026-04-03 17:56:51",
@@ -3978,6 +3988,11 @@
                 },
                 {
                     "date": "2026-04-05 15:36:14",
+                    "experience": 33526347472,
+                    "level": 1264
+                },
+                {
+                    "date": "2026-04-05 16:07:42",
                     "experience": 33526347472,
                     "level": 1264
                 }
