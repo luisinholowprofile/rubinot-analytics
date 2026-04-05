@@ -536,7 +536,7 @@
     return previousXP ? Math.max(0, currentXP - previousXP) : 0;
   }
 
-   // ==================== GRÁFICO DE GANHO DIÁRIO (VERSÃO CORRIGIDA) ====================
+  // ==================== GRÁFICO DE GANHO DIÁRIO (VERSÃO LINHA) ====================
   function renderDailyGainChart(playerName, startDateStr, endDateStr) {
     const canvas = document.getElementById('dailyGainChart');
     const emptyMsg = document.getElementById('dailyEmptyMsg');
@@ -546,15 +546,15 @@
     if (!player || !player.history || player.history.length < 2) {
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
-      if (emptyMsg) emptyMsg.style.display = 'block';
-      emptyMsg.innerHTML = 'Histórico insuficiente para exibir o gráfico. São necessários pelo menos 2 registros de datas diferentes.';
+      if (emptyMsg) {
+        emptyMsg.style.display = 'block';
+        emptyMsg.innerHTML = 'Histórico insuficiente. São necessários pelo menos 2 registros com datas diferentes.';
+      }
       return;
     }
     
-    // Ordena o histórico por data
     let history = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
     
-    // Aplica filtros de data se fornecidos
     let startDate = startDateStr ? new Date(startDateStr) : null;
     let endDate = endDateStr ? new Date(endDateStr) : null;
     if (startDate) startDate.setHours(0,0,0,0);
@@ -565,42 +565,38 @@
     if (history.length < 2) {
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
-      if (emptyMsg) emptyMsg.style.display = 'block';
-      emptyMsg.innerHTML = 'Nenhum dado de ganho diário no período selecionado.';
+      if (emptyMsg) {
+        emptyMsg.style.display = 'block';
+        emptyMsg.innerHTML = 'Nenhum dado no período selecionado.';
+      }
       return;
     }
     
-    // Calcula os ganhos diários (diferença entre dias consecutivos)
     const dailyGains = [];
     const labels = [];
-    const rawDates = [];
-    
     for (let i = 1; i < history.length; i++) {
       const gain = Math.max(0, history[i].experience - history[i-1].experience);
       dailyGains.push(gain);
       const date = new Date(history[i].date);
-      // Formato DD/MM para exibição
       labels.push(`${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}`);
-      rawDates.push(date);
     }
     
     if (dailyGains.length === 0) {
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
-      if (emptyMsg) emptyMsg.style.display = 'block';
-      emptyMsg.innerHTML = 'Nenhum ganho de XP registrado no período.';
+      if (emptyMsg) {
+        emptyMsg.style.display = 'block';
+        emptyMsg.innerHTML = 'Nenhum ganho de XP registrado no período.';
+      }
       return;
     }
     
-    // Exibe o canvas e esconde a mensagem de vazio
     canvas.style.display = 'block';
     if (emptyMsg) emptyMsg.style.display = 'none';
     
-    // Destroi gráfico anterior se existir
     if (dailyGainChart) dailyGainChart.destroy();
     const ctx = canvas.getContext('2d');
     
-    // Cria o gráfico de LINHA (curva)
     dailyGainChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -633,15 +629,13 @@
             },
             backgroundColor: 'rgba(0,0,0,0.8)',
             titleColor: '#fbbf24',
-            bodyColor: '#ffffff',
-            borderColor: '#fbbf24',
-            borderWidth: 1
+            bodyColor: '#ffffff'
           },
           legend: {
             position: 'top',
             labels: {
-              color: 'var(--text-secondary)',
-              font: { size: 12, weight: 'bold' },
+              color: '#94a3b8',
+              font: { size: 12 },
               usePointStyle: true,
               pointStyle: 'circle'
             }
@@ -652,18 +646,16 @@
             title: {
               display: true,
               text: 'XP ganho',
-              color: 'var(--text-secondary)',
-              font: { size: 12, weight: 'bold' }
+              color: '#94a3b8'
             },
             ticks: {
               callback: function(val) {
                 return val.toLocaleString('pt-BR');
               },
-              color: 'var(--text-primary)'
+              color: '#cbd5e1'
             },
             grid: {
-              color: 'var(--border)',
-              lineWidth: 0.5
+              color: '#334155'
             },
             beginAtZero: true
           },
@@ -671,34 +663,53 @@
             title: {
               display: true,
               text: 'Data (Dia/Mês)',
-              color: 'var(--text-secondary)',
-              font: { size: 12, weight: 'bold' }
+              color: '#94a3b8'
             },
             ticks: {
-              color: 'var(--text-primary)',
+              color: '#cbd5e1',
               maxRotation: 45,
               minRotation: 45,
               autoSkip: true,
-              maxTicksLimit: 15,
-              font: { size: 11 }
+              maxTicksLimit: 15
             },
             grid: {
               display: false
             }
           }
-        },
-        elements: {
-          line: {
-            borderJoin: 'round',
-            borderCap: 'round'
-          }
-        },
-        interaction: {
-          mode: 'index',
-          intersect: false
         }
       }
     });
+  }
+
+  function initDailyGain() {
+    const playerSelect = document.getElementById('individualPlayerSelect');
+    const startDate = document.getElementById('dailyStartDate');
+    const endDate = document.getElementById('dailyEndDate');
+    const applyBtn = document.getElementById('applyDailyFilterBtn');
+    
+    if (!playerSelect || !applyBtn) return;
+    
+    function updateChart() {
+      if (playerSelect.value) {
+        renderDailyGainChart(playerSelect.value, startDate.value, endDate.value);
+      } else {
+        const canvas = document.getElementById('dailyGainChart');
+        const emptyMsg = document.getElementById('dailyEmptyMsg');
+        if (dailyGainChart) dailyGainChart.destroy();
+        if (canvas) canvas.style.display = 'none';
+        if (emptyMsg) {
+          emptyMsg.style.display = 'block';
+          emptyMsg.innerHTML = 'Selecione um jogador para ver o gráfico.';
+        }
+      }
+    }
+    
+    playerSelect.onchange = updateChart;
+    applyBtn.onclick = updateChart;
+    
+    if (playerSelect.value) {
+      updateChart();
+    }
   }
 
   // ==================== PREVISÃO DE ULTRAPASSAGEM ====================
@@ -862,7 +873,7 @@
     if (wowData.length === 0) { tbody.innerHTML = ''; emptyMsg.style.display = 'block'; return; }
     emptyMsg.style.display = 'none';
     wowData.sort((a,b) => b.percentChange - a.percentChange);
-    tbody.innerHTML = wowData.map((p, idx) => { const trendIcon = p.percentChange > 5 ? '<i class="fas fa-arrow-up trend-up"></i> 📈' : (p.percentChange < -5 ? '<i class="fas fa-arrow-down trend-down"></i> 📉' : '<i class="fas fa-minus trend-stable"></i> ➡️'); return `<tr><td>${idx+1}</td><td><strong>${p.name}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${p.vocation}</span></td><td>${p.currentGain.toLocaleString('pt-BR')}</td><td>${p.prevGain.toLocaleString('pt-BR')}</td><td class="${p.percentChange>0?'trend-up':(p.percentChange<0?'trend-down':'trend-stable')}">${p.percentChange.toFixed(1)}%</td><td>${trendIcon}</td></tr>`; }).join('');
+    tbody.innerHTML = wowData.map((p, idx) => { const trendIcon = p.percentChange > 5 ? '<i class="fas fa-arrow-up trend-up"></i> 📈' : (p.percentChange < -5 ? '<i class="fas fa-arrow-down trend-down"></i> 📉' : '<i class="fas fa-minus trend-stable"></i> ➡️'); return `<tr><td>${idx+1}</td>}<strong>${p.name}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${p.vocation}</span></td><td>${p.currentGain.toLocaleString('pt-BR')}</td><td>${p.prevGain.toLocaleString('pt-BR')}</td><td class="${p.percentChange>0?'trend-up':(p.percentChange<0?'trend-down':'trend-stable')}">${p.percentChange.toFixed(1)}%</td><td>${trendIcon}</td></tr>`; }).join('');
   }
 
   // ==================== ANÁLISE DETALHADA ====================
