@@ -536,7 +536,7 @@
     return previousXP ? Math.max(0, currentXP - previousXP) : 0;
   }
 
-  // ==================== GRÁFICO DE GANHO DIÁRIO ====================
+   // ==================== GRÁFICO DE GANHO DIÁRIO (VERSÃO CORRIGIDA) ====================
   function renderDailyGainChart(playerName, startDateStr, endDateStr) {
     const canvas = document.getElementById('dailyGainChart');
     const emptyMsg = document.getElementById('dailyEmptyMsg');
@@ -547,11 +547,14 @@
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
       if (emptyMsg) emptyMsg.style.display = 'block';
+      emptyMsg.innerHTML = 'Histórico insuficiente para exibir o gráfico. São necessários pelo menos 2 registros de datas diferentes.';
       return;
     }
     
+    // Ordena o histórico por data
     let history = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
     
+    // Aplica filtros de data se fornecidos
     let startDate = startDateStr ? new Date(startDateStr) : null;
     let endDate = endDateStr ? new Date(endDateStr) : null;
     if (startDate) startDate.setHours(0,0,0,0);
@@ -563,31 +566,41 @@
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
       if (emptyMsg) emptyMsg.style.display = 'block';
+      emptyMsg.innerHTML = 'Nenhum dado de ganho diário no período selecionado.';
       return;
     }
     
+    // Calcula os ganhos diários (diferença entre dias consecutivos)
     const dailyGains = [];
     const labels = [];
+    const rawDates = [];
+    
     for (let i = 1; i < history.length; i++) {
       const gain = Math.max(0, history[i].experience - history[i-1].experience);
       dailyGains.push(gain);
       const date = new Date(history[i].date);
+      // Formato DD/MM para exibição
       labels.push(`${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}`);
+      rawDates.push(date);
     }
     
     if (dailyGains.length === 0) {
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
       if (emptyMsg) emptyMsg.style.display = 'block';
+      emptyMsg.innerHTML = 'Nenhum ganho de XP registrado no período.';
       return;
     }
     
+    // Exibe o canvas e esconde a mensagem de vazio
     canvas.style.display = 'block';
     if (emptyMsg) emptyMsg.style.display = 'none';
     
+    // Destroi gráfico anterior se existir
     if (dailyGainChart) dailyGainChart.destroy();
     const ctx = canvas.getContext('2d');
     
+    // Cria o gráfico de LINHA (curva)
     dailyGainChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -598,8 +611,8 @@
           borderColor: '#fbbf24',
           backgroundColor: 'rgba(251, 191, 36, 0.1)',
           borderWidth: 3,
-          pointRadius: 5,
-          pointHoverRadius: 8,
+          pointRadius: 6,
+          pointHoverRadius: 9,
           pointBackgroundColor: '#fbbf24',
           pointBorderColor: '#ffffff',
           pointBorderWidth: 2,
@@ -620,13 +633,15 @@
             },
             backgroundColor: 'rgba(0,0,0,0.8)',
             titleColor: '#fbbf24',
-            bodyColor: '#ffffff'
+            bodyColor: '#ffffff',
+            borderColor: '#fbbf24',
+            borderWidth: 1
           },
           legend: {
             position: 'top',
             labels: {
-              color: '#94a3b8',
-              font: { size: 12 },
+              color: 'var(--text-secondary)',
+              font: { size: 12, weight: 'bold' },
               usePointStyle: true,
               pointStyle: 'circle'
             }
@@ -637,16 +652,18 @@
             title: {
               display: true,
               text: 'XP ganho',
-              color: '#94a3b8'
+              color: 'var(--text-secondary)',
+              font: { size: 12, weight: 'bold' }
             },
             ticks: {
               callback: function(val) {
                 return val.toLocaleString('pt-BR');
               },
-              color: '#cbd5e1'
+              color: 'var(--text-primary)'
             },
             grid: {
-              color: '#334155'
+              color: 'var(--border)',
+              lineWidth: 0.5
             },
             beginAtZero: true
           },
@@ -654,50 +671,34 @@
             title: {
               display: true,
               text: 'Data (Dia/Mês)',
-              color: '#94a3b8'
+              color: 'var(--text-secondary)',
+              font: { size: 12, weight: 'bold' }
             },
             ticks: {
-              color: '#cbd5e1',
+              color: 'var(--text-primary)',
               maxRotation: 45,
               minRotation: 45,
               autoSkip: true,
-              maxTicksLimit: 12
+              maxTicksLimit: 15,
+              font: { size: 11 }
             },
             grid: {
               display: false
             }
           }
+        },
+        elements: {
+          line: {
+            borderJoin: 'round',
+            borderCap: 'round'
+          }
+        },
+        interaction: {
+          mode: 'index',
+          intersect: false
         }
       }
     });
-  }
-
-  function initDailyGain() {
-    const playerSelect = document.getElementById('individualPlayerSelect');
-    const startDate = document.getElementById('dailyStartDate');
-    const endDate = document.getElementById('dailyEndDate');
-    const applyBtn = document.getElementById('applyDailyFilterBtn');
-    
-    if (!playerSelect || !applyBtn) return;
-    
-    function updateChart() {
-      if (playerSelect.value) {
-        renderDailyGainChart(playerSelect.value, startDate.value, endDate.value);
-      } else {
-        const canvas = document.getElementById('dailyGainChart');
-        const emptyMsg = document.getElementById('dailyEmptyMsg');
-        if (dailyGainChart) dailyGainChart.destroy();
-        if (canvas) canvas.style.display = 'none';
-        if (emptyMsg) emptyMsg.style.display = 'block';
-      }
-    }
-    
-    playerSelect.onchange = updateChart;
-    applyBtn.onclick = updateChart;
-    
-    if (playerSelect.value) {
-      updateChart();
-    }
   }
 
   // ==================== PREVISÃO DE ULTRAPASSAGEM ====================
