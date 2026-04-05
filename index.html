@@ -287,7 +287,7 @@
     <!-- ABA 2 - ANÁLISE DETALHADA -->
     <div id="tab2" class="tab-content"><div class="detailed-players-grid" id="detailedPlayersGrid"></div></div>
 
-    <!-- ABA 3 - EVOLUÇÃO INDIVIDUAL (GANHO DIÁRIO) -->
+    <!-- ABA 3 - EVOLUÇÃO INDIVIDUAL (GANHO DIÁRIO - AGRUPADO POR DIA) -->
     <div id="tab3" class="tab-content">
       <div class="chart-card" style="margin-bottom:20px;">
         <div class="chart-header"><h3><i class="fas fa-chart-line"></i> Ganho Diário de XP</h3><p>Diferença de XP entre dias consecutivos (período selecionado)</p></div>
@@ -536,7 +536,7 @@
     return previousXP ? Math.max(0, currentXP - previousXP) : 0;
   }
 
-  // ==================== GRÁFICO DE GANHO DIÁRIO (VERSÃO LINHA) ====================
+  // ==================== GRÁFICO DE GANHO DIÁRIO (AGRUPADO POR DIA - CORRIGIDO) ====================
   function renderDailyGainChart(playerName, startDateStr, endDateStr) {
     const canvas = document.getElementById('dailyGainChart');
     const emptyMsg = document.getElementById('dailyEmptyMsg');
@@ -553,16 +553,39 @@
       return;
     }
     
+    // Ordena o histórico por data
     let history = [...player.history].sort((a,b) => new Date(a.date) - new Date(b.date));
     
+    // ========== AGRUPAR POR DIA (ignorar horário) ==========
+    const dailyMap = new Map();
+    for (const entry of history) {
+      const date = new Date(entry.date);
+      const dayKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      const formattedDate = `${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}`;
+      
+      if (!dailyMap.has(dayKey)) {
+        dailyMap.set(dayKey, { date: formattedDate, fullDate: date, xp: entry.experience });
+      } else {
+        // Se já tem registro para este dia, mantém o mais recente (último XP do dia)
+        const existing = dailyMap.get(dayKey);
+        if (entry.experience > existing.xp) {
+          dailyMap.set(dayKey, { date: formattedDate, fullDate: date, xp: entry.experience });
+        }
+      }
+    }
+    
+    // Converte o mapa para array e ordena por data
+    let dailyData = Array.from(dailyMap.values()).sort((a,b) => a.fullDate - b.fullDate);
+    
+    // Aplica filtros de data
     let startDate = startDateStr ? new Date(startDateStr) : null;
     let endDate = endDateStr ? new Date(endDateStr) : null;
     if (startDate) startDate.setHours(0,0,0,0);
     if (endDate) endDate.setHours(23,59,59,999);
-    if (startDate) history = history.filter(entry => new Date(entry.date) >= startDate);
-    if (endDate) history = history.filter(entry => new Date(entry.date) <= endDate);
+    if (startDate) dailyData = dailyData.filter(entry => entry.fullDate >= startDate);
+    if (endDate) dailyData = dailyData.filter(entry => entry.fullDate <= endDate);
     
-    if (history.length < 2) {
+    if (dailyData.length < 2) {
       if (dailyGainChart) dailyGainChart.destroy();
       canvas.style.display = 'none';
       if (emptyMsg) {
@@ -572,13 +595,13 @@
       return;
     }
     
+    // Calcula os ganhos diários (diferença de XP entre dias consecutivos)
     const dailyGains = [];
     const labels = [];
-    for (let i = 1; i < history.length; i++) {
-      const gain = Math.max(0, history[i].experience - history[i-1].experience);
+    for (let i = 1; i < dailyData.length; i++) {
+      const gain = Math.max(0, dailyData[i].xp - dailyData[i-1].xp);
       dailyGains.push(gain);
-      const date = new Date(history[i].date);
-      labels.push(`${date.getDate().toString().padStart(2,'0')}/${(date.getMonth()+1).toString().padStart(2,'0')}`);
+      labels.push(dailyData[i].date);
     }
     
     if (dailyGains.length === 0) {
@@ -873,7 +896,15 @@
     if (wowData.length === 0) { tbody.innerHTML = ''; emptyMsg.style.display = 'block'; return; }
     emptyMsg.style.display = 'none';
     wowData.sort((a,b) => b.percentChange - a.percentChange);
-    tbody.innerHTML = wowData.map((p, idx) => { const trendIcon = p.percentChange > 5 ? '<i class="fas fa-arrow-up trend-up"></i> 📈' : (p.percentChange < -5 ? '<i class="fas fa-arrow-down trend-down"></i> 📉' : '<i class="fas fa-minus trend-stable"></i> ➡️'); return `<tr><td>${idx+1}</td>}<strong>${p.name}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${p.vocation}</span></td><td>${p.currentGain.toLocaleString('pt-BR')}</td><td>${p.prevGain.toLocaleString('pt-BR')}</td><td class="${p.percentChange>0?'trend-up':(p.percentChange<0?'trend-down':'trend-stable')}">${p.percentChange.toFixed(1)}%</td><td>${trendIcon}</td></tr>`; }).join('');
+    tbody.innerHTML = wowData.map((p, idx) => { const trendIcon = p.percentChange > 5 ? '<i class="fas fa-arrow-up trend-up"></i> 📈' : (p.percentChange < -5 ? '<i class="fas fa-arrow-down trend-down"></i> 📉' : '<i class="fas fa-minus trend-stable"></i> ➡️'); return `<tr>
+        <td>${idx+1}</td>
+        <td><strong>${p.name}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${p.vocation}</span></td>
+        <td>${p.currentGain.toLocaleString('pt-BR')}</td>
+        <td>${p.prevGain.toLocaleString('pt-BR')}</td>
+        <td class="${p.percentChange>0?'trend-up':(p.percentChange<0?'trend-down':'trend-stable')}">${p.percentChange.toFixed(1)}%</td>
+        <td>${trendIcon}</td>
+      </tr>`;
+    }).join('');
   }
 
   // ==================== ANÁLISE DETALHADA ====================
