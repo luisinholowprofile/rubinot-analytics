@@ -1,7 +1,7 @@
 {
-    "last_update": "2026-04-07 11:44:48",
-    "last_update_timestamp": 1775573174,
-    "next_update_estimate": 1775574974.934465,
+    "last_update": "2026-04-07 12:16:19",
+    "last_update_timestamp": 1775575066,
+    "next_update_estimate": 1775576866.587322,
     "players": [
         {
             "name": "Kaiquerah Legendary",
@@ -9,7 +9,7 @@
             "vocation": "Royal Paladin",
             "level": 1440,
             "experience": 49662690141,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -370,6 +370,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 49662690141,
                     "level": 1440
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 49662690141,
+                    "level": 1440
                 }
             ]
         },
@@ -379,7 +384,7 @@
             "vocation": "Elder Druid",
             "level": 1402,
             "experience": 45773769448,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -740,6 +745,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 45773769448,
                     "level": 1402
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 45773769448,
+                    "level": 1402
                 }
             ]
         },
@@ -749,7 +759,7 @@
             "vocation": "Elite Knight",
             "level": 1385,
             "experience": 44114907232,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:48:16",
@@ -1105,6 +1115,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 44114907232,
                     "level": 1385
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 44114907232,
+                    "level": 1385
                 }
             ]
         },
@@ -1114,7 +1129,7 @@
             "vocation": "Master Sorcerer",
             "level": 1393,
             "experience": 44861160868,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -1475,6 +1490,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 44861160868,
                     "level": 1393
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 44861160868,
+                    "level": 1393
                 }
             ]
         },
@@ -1484,7 +1504,7 @@
             "vocation": "Elder Druid",
             "level": 1322,
             "experience": 38392553601,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -1845,6 +1865,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 38392553601,
                     "level": 1322
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 38392553601,
+                    "level": 1322
                 }
             ]
         },
@@ -1854,7 +1879,7 @@
             "vocation": "Master Sorcerer",
             "level": 1347,
             "experience": 40628553188,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -2215,6 +2240,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 40628553188,
                     "level": 1347
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 40628553188,
+                    "level": 1347
                 }
             ]
         },
@@ -2224,7 +2254,7 @@
             "vocation": "Royal Paladin",
             "level": 1307,
             "experience": 37122679714,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -2585,6 +2615,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 37122679714,
                     "level": 1307
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 37122679714,
+                    "level": 1307
                 }
             ]
         },
@@ -2594,7 +2629,7 @@
             "vocation": "Elite Knight",
             "level": 1262,
             "experience": 33359443380,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -2955,6 +2990,11 @@
                     "date": "2026-04-07 11:44:48",
                     "experience": 33359443380,
                     "level": 1262
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
+                    "experience": 33359443380,
+                    "level": 1262
                 }
             ]
         },
@@ -2964,7 +3004,7 @@
             "vocation": "Elder Druid",
             "level": 1266,
             "experience": 33731170850,
-            "scrape_date": "2026-04-07 11:44:48",
+            "scrape_date": "2026-04-07 12:16:19",
             "history": [
                 {
                     "date": "2026-04-05 16:39:14",
@@ -3353,6 +3393,11 @@
                 },
                 {
                     "date": "2026-04-07 11:44:48",
+                    "experience": 33731170850,
+                    "level": 1266
+                },
+                {
+                    "date": "2026-04-07 12:16:19",
                     "experience": 33731170850,
                     "level": 1266
                 }
