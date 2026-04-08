@@ -6430,5 +6430,77 @@
         "experience": 33769686204,
         "vocation": "Elder Druid",
         "rank": "10."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Kaiquerah Legendary",
+        "level": 1442,
+        "experience": 49792576337,
+        "vocation": "Royal Paladin",
+        "rank": "1."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Luisinho Legendary",
+        "level": 1402,
+        "experience": 45807606846,
+        "vocation": "Elder Druid",
+        "rank": "2."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Caioox Legendary",
+        "level": 1385,
+        "experience": 44145266642,
+        "vocation": "Elite Knight",
+        "rank": "4."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Gama Legendary",
+        "level": 1393,
+        "experience": 44895209670,
+        "vocation": "Master Sorcerer",
+        "rank": "3."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Gts Legendary",
+        "level": 1328,
+        "experience": 38895851616,
+        "vocation": "Elder Druid",
+        "rank": "6."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Theusin Legendary",
+        "level": 1354,
+        "experience": 41192043001,
+        "vocation": "Master Sorcerer",
+        "rank": "5."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Kaiquerah Little Legendary",
+        "level": 1312,
+        "experience": 37499694899,
+        "vocation": "Royal Paladin",
+        "rank": "7."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Diguinho Legendary",
+        "level": 1267,
+        "experience": 33761971859,
+        "vocation": "Elite Knight",
+        "rank": "12."
+    },
+    {
+        "date": "2026-04-07 22:48:30",
+        "name": "Sdds Monk Wayne",
+        "level": 1267,
+        "experience": 33769686204,
+        "vocation": "Elder Druid",
+        "rank": "11."
     }
 ]
