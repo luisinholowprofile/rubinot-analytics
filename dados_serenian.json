@@ -1,15 +1,15 @@
 {
-    "last_update": "2026-04-09 05:52:03",
-    "last_update_timestamp": 1775724829,
-    "next_update_estimate": 1775726629.475956,
+    "last_update": "2026-04-09 06:23:52",
+    "last_update_timestamp": 1775726720,
+    "next_update_estimate": 1775728520.132258,
     "players": [
         {
             "name": "Kaiquerah Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "1.",
+            "vocation": "Royal Paladin",
+            "level": 1448,
+            "experience": 50486571863,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -705,16 +705,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 50486571863,
                     "level": 1448
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 50486571863,
+                    "level": 1448
                 }
             ]
         },
         {
             "name": "Luisinho Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "2.",
+            "vocation": "Elder Druid",
+            "level": 1410,
+            "experience": 46538126142,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -1410,16 +1415,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 46538126142,
                     "level": 1410
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 46538126142,
+                    "level": 1410
                 }
             ]
         },
         {
             "name": "Caioox Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "4.",
+            "vocation": "Elite Knight",
+            "level": 1393,
+            "experience": 44889070546,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:48:16",
@@ -2110,16 +2120,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 44889070546,
                     "level": 1393
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 44889070546,
+                    "level": 1393
                 }
             ]
         },
         {
             "name": "Gama Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "3.",
+            "vocation": "Master Sorcerer",
+            "level": 1402,
+            "experience": 45794730553,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -2815,16 +2830,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 45794730553,
                     "level": 1402
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 45794730553,
+                    "level": 1402
                 }
             ]
         },
         {
             "name": "Gts Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "6.",
+            "vocation": "Elder Druid",
+            "level": 1333,
+            "experience": 39311334262,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -3520,16 +3540,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 39311334262,
                     "level": 1333
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 39311334262,
+                    "level": 1333
                 }
             ]
         },
         {
             "name": "Theusin Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "5.",
+            "vocation": "Master Sorcerer",
+            "level": 1358,
+            "experience": 41628117153,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -4225,16 +4250,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 41628117153,
                     "level": 1358
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 41628117153,
+                    "level": 1358
                 }
             ]
         },
         {
             "name": "Kaiquerah Little Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "7.",
+            "vocation": "Royal Paladin",
+            "level": 1317,
+            "experience": 37928993288,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -4930,16 +4960,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 37928993288,
                     "level": 1317
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 37928993288,
+                    "level": 1317
                 }
             ]
         },
         {
             "name": "Diguinho Legendary",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "10.",
+            "vocation": "Elite Knight",
+            "level": 1271,
+            "experience": 34122931843,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 19:16:47",
@@ -5635,16 +5670,21 @@
                     "date": "2026-04-09 05:20:33",
                     "experience": 34122931843,
                     "level": 1271
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
+                    "experience": 34122931843,
+                    "level": 1271
                 }
             ]
         },
         {
             "name": "Sdds Monk Wayne",
-            "rank": "?",
-            "vocation": "",
-            "level": 0,
-            "experience": 0,
-            "scrape_date": "2026-04-09 05:52:03",
+            "rank": "12.",
+            "vocation": "Elder Druid",
+            "level": 1268,
+            "experience": 33823236893,
+            "scrape_date": "2026-04-09 06:23:52",
             "history": [
                 {
                     "date": "2026-04-05 16:39:14",
@@ -6368,6 +6408,11 @@
                 },
                 {
                     "date": "2026-04-09 05:20:33",
+                    "experience": 33823236893,
+                    "level": 1268
+                },
+                {
+                    "date": "2026-04-09 06:23:52",
                     "experience": 33823236893,
                     "level": 1268
                 }
